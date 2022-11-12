@@ -6,8 +6,12 @@
       <hr />
       {{ user }}
       {{ token }}
-      <hr />
 
+        <h1 v-if="hasRole('admin')">Show  Admin </h1>
+        <h1 v-if="hasRole('user')">Show User </h1>
+        <h1 v-if="hasRole('developer')">Show Developer </h1>
+      <hr />
+{{ roles }}
       <BaseSpinner v-if="isLogoutLoading" />
       <base-button @click="logoutUser" v-else> Logout</base-button>
       
@@ -30,6 +34,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      roles: ['developer','admin'],
       isScreenLoading: false,
       isLogoutLoading: false,
       currentUser: {},
@@ -40,6 +45,19 @@ export default {
       this.getUserDetails();
   },
   computed: {
+    hasRole(){
+      return (role)=> this.roles.includes(role);
+    },
+
+    isAdmin(){
+      return this.roles.includes('admin','user','developer');
+    },
+    isUser(){
+      return this.roles.includes('user');
+    },
+    isDeveloper(){
+      return this.roles.includes('developer');
+    },
     ...mapGetters(["user", "token"]),
   },
   components: { BaseButton, BaseScreenLoading, BaseSpinner },

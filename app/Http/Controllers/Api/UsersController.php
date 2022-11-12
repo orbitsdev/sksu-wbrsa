@@ -13,4 +13,15 @@ class UsersController extends Controller
         $users = User::all();
         return response()->json($users);
     }
+
+    public function getCurrentUser(Request $request){       
+        
+        $user = $request->user();
+        $roles = $request->user()->roles()->pluck('name');
+        if($user){
+            return response()->json(['user'=> $user, 'roles'=> $roles], 200);
+        }
+        return response()->json(['Not Found'], 500);
+        // return $request->user();
+    }
 }
