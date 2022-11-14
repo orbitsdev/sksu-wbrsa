@@ -6,10 +6,15 @@
 
 export default {
 
-    setUser(state, payload){
+    setUserDetails(state, payload){
         
-        state.user = payload.user;
-        state.token = payload.token;
+        state.user = {
+            user: payload.user,
+            roles: payload.roles,
+            token: payload.token,
+        };
+        
+
 
     }
 

@@ -10,7 +10,7 @@ export default {
         return{
 
             user: null,
-            token:null,
+        
             
         }
     },

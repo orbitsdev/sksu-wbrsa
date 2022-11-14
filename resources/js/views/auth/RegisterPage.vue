@@ -73,7 +73,7 @@
                   </div>
                 </div>
   
-                <base-spinner v-if="isLoading"></base-spinner>
+                <base-spinner v-if="isRegisterLoading"></base-spinner>
                 <div class="form-group mt-2" v-else>
                   <BaseButton> Register</BaseButton>
                 </div>
@@ -167,27 +167,58 @@
           password_confirmation: "",
         },
   
-        isLoading: false,
+        isRegisterLoading: false,
+        isLoginLoading: false,
         error: {},
         requestError: null,
       };
     },
   
     methods: {
+
+      async loginUser(user){
+        
+        this.isLoginLoading  = true;
+        await this.$store.dispatch('loginUser', user).then(res=>{
+            localStorage.setItem('token', res.data);
+            window.location.reload(true);
+            
+
+        }).catch(err=>{
+          console.log(err.response);
+            if(err.response.status === 422){  
+              this.err  = err.response.data.errors;
+            }else{
+              this.requestError = err.response;
+            }          
+        }).finally(()=>{
+          this.isLoginLoading  = false;
+        });
+        
+      },
+
       async registerUser() {
-            this.isLoading = true;
-            await axios.post('api/register', this.form).then((response)=>{
-                console.log(response);
+            this.isRegisterLoading = true;
+            await axios.post('api/register', this.form).then(()=>{
+                  this.loginUser({
+                    email: this.form.email,
+                    password: this.form.password,
+                    device_name: 'browser',
+                  });
             }).catch((error)=>{
                 if(error.response.status === 422){
+
                     this.error = error.response.data.errors;
-                    console.log(error.response.data.errors);
+
+
+ 
                 }else{
-                    console.log(error);
+
+                  this.requestError = error;
 
                 }
             }).finally(()=>{
-                this.isLoading = false;
+                this.isRegisterLoading = false;
             });
       },
     },

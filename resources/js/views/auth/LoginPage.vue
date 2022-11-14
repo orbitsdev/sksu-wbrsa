@@ -52,49 +52,11 @@
               </form>
               <base-spinner v-if="isGoogleLoading"></base-spinner>
               <div class="form-group mt-2" v-else>
-                <BaseButton @click="continueWithSocialAccount">Continue With Google Account</BaseButton>
+                <GoogleButton  @click="continueWithSocialAccount"> Continue with Google</GoogleButton>
               </div>
 
             </div>
-            <div class="col-sm-6 hide-on-mobile">
-              <div id="demo" class="carousel slide" data-ride="carousel">
-                <!-- Indicators -->
-                <ul class="carousel-indicators">
-                  <li data-target="#demo" data-slide-to="0" class="active"></li>
-                  <li data-target="#demo" data-slide-to="1"></li>
-                </ul>
-                <!-- The slideshow -->
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                    <div class="slider-feature-card">
-                      <img src="https://picsum.photos/200/300" alt="" />
-                      <h3 class="slider-title">Title Here</h3>
-                      <p class="slider-description">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure,
-                        odio!
-                      </p>
-                    </div>
-                  </div>
-                  <div class="carousel-item">
-                    <div class="slider-feature-card">
-                      <img src="https://picsum.photos/200/300" alt="" />
-                      <h3 class="slider-title">Title Here</h3>
-                      <p class="slider-description">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione,
-                        debitis?
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <!-- Left and right controls -->
-                <a class="carousel-control-prev" href="#demo" data-slide="prev">
-                  <span class="carousel-control-prev-icon"></span>
-                </a>
-                <a class="carousel-control-next" href="#demo" data-slide="next">
-                  <span class="carousel-control-next-icon"></span>
-                </a>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -105,6 +67,7 @@
 
 import axios from "axios";
 import BaseButton from "../../components/BaseButton.vue";
+import GoogleButton from '../../components/GoogleButton.vue';
 import { mapActions } from "vuex";
   
   export default {
@@ -112,6 +75,7 @@ import { mapActions } from "vuex";
   
     components: {
       BaseButton,
+      GoogleButton
     },
   
     computed: {
@@ -150,9 +114,6 @@ import { mapActions } from "vuex";
 
       async continueWithSocialAccount(){
         this.$store.dispatch('logInWithSocialAccount').then(res=>{
-                   
-          console.log(res.data.url);
-          console.log('redirec to gogole sign');
            window.location.href = res.data.url;
         }).catch(err=>{
           console.log(err);
@@ -167,34 +128,28 @@ import { mapActions } from "vuex";
 
       },
 
-      ...mapActions(['auth/setUser']),
 
-    
+
       async loginUser(){
+        
         this.isLoading  = true;
-        await axios.post('api/login', this.form).then( async (response)=>{
-            localStorage.setItem('token', response.data);
-           
-            if(localStorage.getItem('token')){
-              /// store user data in local storage
-              
-              
-           window.location.reload(true);    
-
-            //  this.$router.push('/dashboard');
-
-            }
+        await this.$store.dispatch('loginUser', this.form).then(res=>{
+          console.log(res.data);
+            localStorage.setItem('token', res.data);
+            window.location.reload(true);
             
-        }).catch(error=>{
-          console.log(error.response);
-            if(error.response.status === 422){  
-              this.error  = error.response.data.errors;
+
+        }).catch(err=>{
+          console.log(err.response);
+            if(err.response.status === 422){  
+              this.err  = err.response.data.errors;
             }else{
-              this.requestError = error.response;
+              this.requestError = err.response;
             }          
         }).finally(()=>{
           this.isLoading  = false;
         });
+        
       }
     },
   };

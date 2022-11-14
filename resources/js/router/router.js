@@ -3,7 +3,7 @@ import { createWebHistory } from "vue-router";
 
 import routes from "./routes";
 
-import store from '../store/store';
+import store from "../store/store";
 import axios from "axios";
 import axiosApi from "../api/axiosApi";
 
@@ -13,26 +13,19 @@ const router = createRouter({
 });
 
 function authentecated() {
-    return localStorage.getItem('token');
+    return localStorage.getItem("token");
 }
 
-router.beforeEach( async (to, from, next) =>{
+router.beforeEach(async (to, from, next) => {
     if (to.meta.middleware == "guest" && authentecated()) {
-        next('/dashboard')
-    
+        next("/dashboard");
     } else if (to.meta.middleware === "auth" && !authentecated()) {
-        next('/login');
-       
+        next("/login");
+    } else if (to.meta.middleware === "auth" && authentecated()) {
+        const token = localStorage.getItem("token");
 
-    } else if(to.meta.middleware === "auth" && authentecated()){
-       
-        
-            const token = localStorage.getItem('token');
-
-          next();
-      
-           
-    }else {
+        next();
+    } else {
         next();
     }
 });

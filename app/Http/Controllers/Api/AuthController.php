@@ -69,8 +69,11 @@ class AuthController extends Controller
         if($osas){
             $user->roles()->attach($osas);
         }
-    
-        return response()->json(['msg'=> 'Register Sucessfully']);
+        
+        if($user){
+            return response()->json($user);
+        }
+        return response()->json(['msg'=> 'Register Error'] , 500);
     }
 
 

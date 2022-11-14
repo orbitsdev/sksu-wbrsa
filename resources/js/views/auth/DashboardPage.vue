@@ -4,15 +4,19 @@
     <div v-else>
       Dashboard
       <hr />
-      {{ user }}
-      {{ token }}
+      <span v-if="user"> {{ user }}</span>
+      <span v-if="user"> {{ user.token }}</span>
+      <span v-if="user"> {{ user.roles }}</span>
 
-        <h1 v-if="hasRole('admin')">Show  Admin </h1>
-        <h1 v-if="hasRole('user')">Show User </h1>
-        <h1 v-if="hasRole('developer')">Show Developer </h1>
+      
       <hr />
-{{ roles }}
-      <BaseSpinner v-if="isLogoutLoading" />
+
+      <p> Show Admin </p>
+      <p> Show Osas </p>
+      <p> Show User </p>
+      <hr />
+
+        <BaseSpinner v-if="isLogoutLoading" />
       <base-button @click="logoutUser" v-else> Logout</base-button>
       
     </div>
@@ -24,53 +28,62 @@
 // const token = localStorage.getItem('token');
 // axios.defaults.headers.common['Authorization']= "Bearer "+ token;
 
+
+import can from '../../gates/can';
 import axiosApi from "../../api/axiosApi";
 import BaseButton from "../../components/BaseButton.vue";
 import BaseScreenLoading from "../../components/BaseScreenLoading.vue";
 import BaseSpinner from "../../components/BaseSpinner.vue";
 
-import { mapActions } from "vuex";
+
 import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      roles: ['developer','admin'],
+    
       isScreenLoading: false,
       isLogoutLoading: false,
-      currentUser: {},
-      currentToken: {},
+    
     };
   },
+
+  mounted () {
+
+  },
+
+
   created () {
       this.getUserDetails();
   },
   computed: {
-    hasRole(){
-      return (role)=> this.roles.includes(role);
-    },
-
-    isAdmin(){
-      return this.roles.includes('admin','user','developer');
-    },
-    isUser(){
-      return this.roles.includes('user');
-    },
-    isDeveloper(){
-      return this.roles.includes('developer');
-    },
-    ...mapGetters(["user", "token"]),
-  },
+    
+    ...mapGetters(['user']),
+    
+ 
+},
   components: { BaseButton, BaseScreenLoading, BaseSpinner },
   methods: {
 
     async getUserDetails(){
-      await axiosApi.get('api/user').then(res=>{
-        console.log(res.data);
-      }).catch(e=>{
-        console.log(e);
-      });
+
+      await this.$store.dispatch('getUserDetails').then(res=>{
+          const token = localStorage.getItem('token');
+          this.$store.commit('setUserDetails', {
+            user: res.data.user,
+            roles: res.data.roles,
+            token: token 
+          });
+
+
+          console.log(can('developer'));
+
+      }).catch(err=>{
+
+        console.log(err);
+      }).finally(()=>{
+        });
     },
-    ...mapActions(["setUser"]),
+
     async getAllUsers() {
       await axiosApi
         .get("api/admin/users")
@@ -87,7 +100,7 @@ export default {
         this.isLogoutLoading = true;
         await axiosApi
           .post("api/logout")
-          .then((response) => {
+        .then((response) => {
                 console.log(response);
                 localStorage.removeItem('token');
                 if(this.user!= null){
