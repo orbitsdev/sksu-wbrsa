@@ -45,7 +45,7 @@ export default {
     return axios.post('api/login', payload).then(res=>{
           return res;
       }).catch(err=>{
-        throw new Error(err);
+        throw err;
       });
     }
 

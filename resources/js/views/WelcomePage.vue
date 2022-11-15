@@ -1,23 +1,7 @@
 <template>
   <section id="page-top">
     <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
-      <div class="container px-5" >
-        <div class="sksu-logo">
-            <img src="../../../public/welcomepage/assets/img/sksu1.png" alt="">
-            <span class="navbar-brand fw-bold" href="#page-top">SKSU-WBRSA</span>
-        </div>
-
-        <div class="sksu-logo"> 
-            <BaseButton link to="/login" mode="grey">Login</BaseButton>
-            <div style="padding: 0px 4px;"></div>
-            <BaseButton link to="/register"> Sign Up </BaseButton>
- 
-         </div>
-
-        
-      </div>
-    </nav>
+    <BaseHeader />
     <!-- Mashead header-->
     <header class="masthead">
       <div class="container px-5">
@@ -31,6 +15,7 @@
                 theme from Start Bootstrap!
               </p>
               <div class="d-flex flex-column flex-lg-row align-items-center">
+                <BaseButton link mode="link" to="/login"> Get Started</BaseButton>
                 <!-- <a class="me-lg-3 mb-4 mb-lg-0" href="#!"><img class="app-badge" src="../../../public/welcomepage/assets/img/google-play-badge.svg" alt="..." /></a> -->
                 <!-- <a href="#!"> <img class="app-badge" src="../../../public/welcomepage/assets/img/app-store-badge.svg" alt="..." /></a> -->
               </div>
@@ -74,12 +59,14 @@
 
 <script>
 
-import BaseButton from '../components/BaseButton.vue'
+import BaseButton from '../components/BaseButton.vue';
+import BaseHeader from '../components/welcomepage/BaseHeader.vue';
 export default {
 
   computed: {},
  components: {
     BaseButton,
+    BaseHeader,
  },
   methods: {
     imageLocation(){
@@ -96,14 +83,5 @@ export default {
 
 
 }
-.sksu-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.sksu-logo img{
-    width:40px;
-    height:40px;
-    margin-right: 8px;
-}
+
 </style>

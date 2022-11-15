@@ -1,19 +1,14 @@
 
-
-
-<!-- 
-    <button :class="['button',mode]" v-if="link"> <slot>Button</slot></button>
-    <router-link  :to="to" v-else><slot>{{ to }} here</slot></router-link>
- -->
-
  <template>
 <button>
 
     <div class="logo-wrapper">
-        <img src='https://developers.google.com/identity/images/g-logo.png'>
+        <img src='../../../public/assets/google.png'>
     </div>
     <div class="button-text">
-        <slot> Continue with Google</slot>
+        <p>
+            <slot> Continue with Gogle</slot>
+        </p>
     </div>
 
 </button>    
@@ -32,48 +27,41 @@
 </script>
 
 <style  scoped>
-
-button{
-    border: 6px;
+*{
+    padding: 0;
     margin: 0;
-    padding:0;
-    width: 100%;
-    border-radius: 6px;
+} 
+button{
     display: flex;
+    padding: 4px 8px;
+    justify-content: center;
     align-items: center;
-    transition: all 0.1s ease;
-    background: #4285F4;
-    color: white;
-    transition: all 0.1s ease;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+   
 }
 
 button:hover{
     transform: scale(0.98);
-    background: rgb(125, 170, 242);
 }
 
 .logo-wrapper{
-    background: white;
-    padding:0px  8px;
-    width:60px;
+    
 }
 .logo-wrapper img{
     width: 34px;
     height: 34px;
-    font-size: 16px;
-    font-weight: 600;
-    color: white;
+    margin-right: 4px;
 }
 
 .button-text{
-    width: 100%;
-    padding:  0px 8px;
+        font-size: 16px;
 }
 
 
-.button-text p{
-    text-align: center;
-}
+
 
 
 </style>
