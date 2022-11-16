@@ -28,20 +28,20 @@
                                   {{ error.email[0] }}
                                 </div>
                           </div>
-                        
                           <div class="inp mb-3">
-                              <div class="input-group ">
-                                  <input class="form-control shadow-none" v-if="showPassword" type="text" placeholder="Password" v-model="form.password">
-                                  <input class="form-control shadow-none"  v-else type="password" placeholder="Password" v-model="form.password">
-                                  <button  @click.prevent="showPassword=!showPassword" class="input-group-text">
-                                      <span> <i :class="{'fa-regular fa-eye-slash': showPassword, 'fa-regular fa-eye': !showPassword }"></i> </span>
-                                  </button>
-                              </div>
-                              <div class="error-card" v-if="!!error.password">
-                                  {{ error.password[0] }}
-                                </div>
+                            <div class="input-group ">
+                              <input class="form-control shadow-none" v-if="showPassword" type="text" placeholder="Password" v-model="form.password">
+                              <input class="form-control shadow-none"  v-else type="password" placeholder="Password" v-model="form.password">
+                              <button id="2" tabindex="-2" @click.prevent="showPassword=!showPassword" class="input-group-text" >
+                                <span> <i :class="{'fa-regular fa-eye-slash': showPassword, 'fa-regular fa-eye': !showPassword }"></i> </span>
+                              </button>
+                            </div>
+                            <div class="error-card" v-if="!!error.password">
+                              {{ error.password[0] }}
+                            </div>
+                            <div class="mt-2"></div>
+                            <router-link to="/forgotpassword" > Forgot password?</router-link>
                           </div>
-
               
 
               <!-- <base-spinner></base-spinner> -->
@@ -50,9 +50,7 @@
                   <BaseButton> Login</BaseButton>
                 </div>
             </form>
-            <w-button class="px4" @click="showDialogError">
-              Open dialog
-            </w-button>
+           
             <div class=" text-center my-2 ">
               or
           </div>
@@ -75,8 +73,10 @@
     </div>
 
     
+
 <teleport to="#app">
-<BaseErrorDialog :dialog="!!requestError" @close="clearError" :status="'22'" :message="'dasdasdsad'"> </BaseErrorDialog>
+
+<BaseErrorDialog v-if="!!requestError" :dialog="!!requestError" @close="clearError" :status="requestError.request.status.toString()" :message="requestError.request.statusText"> </BaseErrorDialog>
   
 </teleport>
     
@@ -84,6 +84,10 @@
 </template>
 
 <script>
+
+
+import axios from "axios";
+import BaseSpinner from '../../components/BaseSpinner.vue';
 import BaseHeaderNoButton from '../../components/welcomepage/BaseHeaderNoButton.vue'
 import BaseButton from "../../components/BaseButton.vue";
 import GoogleButton from "../../components/GoogleButton.vue";
@@ -97,9 +101,12 @@ export default {
     BaseHeaderNoButton,
     BaseCardShadow,
     BaseErrorDialog,
+    BaseSpinner,
   },
 
   computed: {
+
+
       emailError() {
         return !!this.error.email;
       },
@@ -131,6 +138,8 @@ export default {
     };
   },
   methods: {
+
+
     showDialogError(){
         this.requestError = 'Error';
     },  
@@ -173,7 +182,7 @@ export default {
           if (err.response.status === 422) {
             this.error = err.response.data.errors;
           } else {
-            this.requestError = err.response;
+            this.requestError = err;
           }
         })
         .finally(() => {
@@ -185,6 +194,10 @@ export default {
 </script>
 
 <style scoped>
+
+.mb-3 button{
+  outline: none;
+}
 main {
 
   min-height: 100vh;

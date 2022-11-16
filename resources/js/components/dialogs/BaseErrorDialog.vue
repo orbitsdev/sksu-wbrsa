@@ -6,15 +6,15 @@
 <template>
     <w-dialog
     overlay-color="rgba(0,0,0,0.5)"
-    v-model="dialog" @close="this.$emit('close')" transition="bounce"  :title="title"
+    v-model="dialog" @close="this.$emit('close')" transition="bounce"  
     persistent
-    :width="550">
-    <Vue3Lottie :animationData="AstronautJSON" :height="300" :width="500" />
+    :width="400">
+    <Vue3Lottie :animationData="AstronautJSON" :height="240" :width="380" />
     
     <div class="message">
-        <h1 class="text-center text-danger"> {{ status }}</h1>
-        <p>
-            {{ message }}
+        <h1 class="text-center text-danger"> Ooops! </h1>
+        <p class="text-center">
+            {{ message }} 
         </p>
     <div class="error-wrapper">
 
@@ -22,7 +22,7 @@
         class="mr2 error-button"
         @click="this.$emit('close')"
         bg-color="error">
-        I understand
+        TRY AGAIN
     </w-button>    
 </div>
 
@@ -49,11 +49,7 @@ import AstronautJSON from '../../../../public/assets/90333-error.json';
                 default: false,
             },
 
-            title: {
-                type: String,
-                required: false,
-                default: 'Opps!'
-            },
+           
             status: {
                 type: String,
                 required: false,
@@ -87,18 +83,25 @@ import AstronautJSON from '../../../../public/assets/90333-error.json';
 <style scoped>
 .error-wrapper{
     display:flex;
-    justify-content: end;
+    justify-content: center;
 }
 .error-button{
 
-    background: #25924E;
+    background: red;
     color: white;
     padding: 20px;
     transition: all 0.1s ease-in-out;
+    box-shadow:
+     rgba(255,0,0, 0.255) 0px 54px 55px,
+    rgba(255,0,0, 0.12) 0px -12px 30px, 
+    rgba(255,0,0, 0.12) 0px 4px 6px, 
+    rgba(255,0,0, 0.17) 0px 12px 13px, 
+    rgba(255,0,0, 0.09) 0px -3px 5px;
 }
 
 .error-button:hover{
     transform: scale(0.98);
+   
 }
 .message{
     padding:20px

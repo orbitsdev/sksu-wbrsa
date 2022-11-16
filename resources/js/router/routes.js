@@ -11,6 +11,8 @@ const routes = [
     {name: 'token-catcher', path: '/authorize/google/callback' , component: SocialAccounTokenCatcher, meta: {middleware: "guest"}},
     {name: 'login', path: '/login' ,component: ()=> import('../views/auth/LoginPage.vue'),    meta: {middleware: "guest"}},
     {name: 'register', path: '/register' , component: ()=> import('../views/auth/RegisterPage.vue'), meta: {middleware: "guest"}},
+    {name: 'forgotpassword', path: '/forgotpassword' , component: ()=> import('../views/auth/ForgotPasswordPage.vue'), meta: {middleware: "guest"}},
+    {name: 'resetnewpassword', path: '/resetnewpassword' , component: ()=> import('../views/auth/ResetPasswordPage.vue'), meta: {middleware: "guest"}},
     {name: 'dashboard', path: '/dashboard' , component: DashboardPage, meta: {middleware: "auth"} },
     {path: '/:notFound(.*)' , component: NotFoundPage},
 ];

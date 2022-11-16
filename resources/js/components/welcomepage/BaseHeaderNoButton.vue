@@ -8,9 +8,6 @@
               <img src="../../../../public/welcomepage/assets/img/sksu1.png" alt="">
               <span class="navbar-brand fw-bold" href="#page-top">SKSU</span>
           </div>
-         
-  
-          
         </div>
       </nav>
 </template>

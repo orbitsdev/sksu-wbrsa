@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\GoogleController;
+
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Mail\NewPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,8 @@ use Laravel\Socialite\Facades\Socialite;
 Route::get('/', function () {
     return view('index');
 });
+
+Route::get('/newpassword', [NewPasswordController::class, 'showNewPasswordEmail']);
 
 
 

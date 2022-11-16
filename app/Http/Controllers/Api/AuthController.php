@@ -13,6 +13,12 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
 
+
+    public function error(){
+        return response()->json(['msg'=>'An Error occur'], 500);
+    }
+
+
     public function logout(Request $request){
 
 
@@ -21,6 +27,7 @@ class AuthController extends Controller
 
          $token = PersonalAccessToken::findToken($accessToken);
          $token->delete();
+         $request->user()->tokens()->delete();
      }
     // Get access token from database
 
@@ -43,7 +50,9 @@ class AuthController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-     
+        
+
+
         return $user->createToken($request->device_name)->plainTextToken;
 
     }

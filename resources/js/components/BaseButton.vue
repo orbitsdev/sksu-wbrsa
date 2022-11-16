@@ -50,6 +50,8 @@
     padding: 0px 16px;
     font-size: 18px;
     font-weight: 600;
+    outline: none;
+    border:none;
     color: white;
     background: #429460;
     border-color: #429460;

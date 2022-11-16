@@ -60,7 +60,7 @@
                                 <div class="input-group ">
                                     <input class="form-control shadow-none" v-if="showPassword" type="text" placeholder="Password" v-model="form.password">
                                     <input class="form-control shadow-none"  v-else type="password" placeholder="Password" v-model="form.password">
-                                    <button  @click.prevent="showPassword=!showPassword" class="input-group-text">
+                                    <button id="2" tabindex="-2" @click.prevent="showPassword=!showPassword" class="input-group-text" >
                                         <span> <i :class="{'fa-regular fa-eye-slash': showPassword, 'fa-regular fa-eye': !showPassword }"></i> </span>
                                     </button>
                                 </div>
@@ -72,7 +72,7 @@
                                 <div class="input-group ">
                                     <input class="form-control shadow-none" v-if="showConfirmPassword" type="text" placeholder="Confirm Password" v-model="form.password_confirmation">
                                     <input class="form-control shadow-none"  v-else type="password" placeholder="Confirm Password" v-model="form.password_confirmation">
-                                    <button  @click.prevent="showConfirmPassword=!showConfirmPassword" class="input-group-text">
+                                    <button  id="1" tabindex="-1"  @click.prevent="showConfirmPassword=!showConfirmPassword" class="input-group-text">
                                         <span> <i :class="{'fa-regular fa-eye-slash': showConfirmPassword, 'fa-regular fa-eye': !showConfirmPassword }"></i> </span>
                                     </button>
                                 </div>
@@ -88,6 +88,7 @@
               <div class=" text-center my-2 ">
                 or
             </div>
+            <!-- <button @click="testError"> SHOW ERROR</button> -->
               <base-spinner v-if="isGoogleLoading"></base-spinner>
                 <GoogleButton v-else @click="continueWithSocialAccount" />
 
@@ -103,11 +104,17 @@
         </div>
       </div>
   
+<teleport to="#app">
+
+  <BaseErrorDialog v-if="!!requestError" :dialog="!!requestError" @close="clearError" :status="requestError.request.status.toString()" :message="requestError.request.statusText"> </BaseErrorDialog>
+    
+  </teleport>
     </main>
   </template>
   
   <script>
   import axios from "axios";
+  import BaseErrorDialog from '../../components/dialogs/BaseErrorDialog.vue';
   import BaseHeaderNoButton from '../../components/welcomepage/BaseHeaderNoButton.vue'
 import BaseButton from "../../components/BaseButton.vue";
 import GoogleButton from "../../components/GoogleButton.vue";
@@ -120,7 +127,9 @@ import BaseCardShadow from '../../components/BaseCardShadow.vue'
       BaseButton,
     GoogleButton,
     BaseHeaderNoButton,
-    BaseCardShadow
+    BaseCardShadow,
+    BaseErrorDialog,
+
     },
     computed: {
       firstnameError() {
@@ -162,6 +171,19 @@ import BaseCardShadow from '../../components/BaseCardShadow.vue'
   
     methods: {
 
+      clearError(){
+      console.log('ey');
+      this.requestError  = null;
+    },
+      async testError(){
+        await axios.post('api/error').then(res=>{
+            console.log(err);
+        }).catch(err=>{
+          console.log(err);
+          this.requestError = err;
+        });
+      }
+      ,
         async continueWithSocialAccount() {
         this.isGoogleLoading = true;
       await this.$store
@@ -171,6 +193,7 @@ import BaseCardShadow from '../../components/BaseCardShadow.vue'
         })
         .catch((err) => {
           console.log(err);
+            this.requestError = err;
         }).finally(()=>{
             this.isGoogleLoading = false;
         });
@@ -187,7 +210,8 @@ import BaseCardShadow from '../../components/BaseCardShadow.vue'
             if(err.response.status === 422){  
               this.err  = err.response.data.errors;
             }else{
-              this.requestError = err.response;
+              console.log(err);
+            this.requestError = err;
             }          
         }).finally(()=>{
           this.isLoginLoading  = false;
@@ -207,7 +231,8 @@ import BaseCardShadow from '../../components/BaseCardShadow.vue'
                     this.error = error.response.data.errors;
  
                 }else{
-                  this.requestError = error;
+                  console.log(err);
+            this.requestError = err;
                 }
             }).finally(()=>{
                 this.isRegisterLoading = false;
@@ -219,7 +244,9 @@ import BaseCardShadow from '../../components/BaseCardShadow.vue'
   
   <style scoped>
 
-  
+  .mb-3 button{
+    outline: none;
+  }
   .form-control:focus {
     border-color: #bfc6be !important;
   }

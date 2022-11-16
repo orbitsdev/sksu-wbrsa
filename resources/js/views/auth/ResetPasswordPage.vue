@@ -1,0 +1,128 @@
+<template>
+    <main>
+      <BaseHeaderNoButton/>
+      
+     <div style="height: 18px"></div>
+     <div class="content-wrapper d-flex align-items-center auth">
+         <div class="row flex-grow">
+             <div class="col-lg-4 mx-auto">
+                 <BaseCardShadow>
+                  <div class="auth-form-light text-left p-5">
+                      <!-- <div class="brand-logo">
+                          <img src="../../../../public/loginpage/assets/images/logo.svg">
+                      </div> -->
+                    <h1>Please enter your email</h1>
+                      <form @submit.prevent="resetPassword" class="login-form">
+  
+                           
+                            <div class="inp mb-3">
+                                <div class="input-group ">
+                                    <input 
+                                    :class="['form-control shadow-none', { 'error-border': error.email }]"
+                                    
+                                    type="email"
+                                     placeholder="Email"
+                                     v-model="form.email"
+                                     >
+                                </div>
+                                <div class="error-card" v-if="!!error.email">
+                                    {{ error.email[0] }}
+                                  </div>
+                            </div>
+                           
+                
+  
+                <!-- <base-spinner></base-spinner> -->
+                <base-spinner v-if="isLoading"></base-spinner>
+                <div class=" mt-2" v-else>
+                    <BaseButton> Submit </BaseButton>
+                  </div>
+              </form>
+             
+            
+  
+             
+                                          <div class="text-center mt-3 font-weight-light">
+                                             <router-link to="/login"> Back to login page </router-link>
+                                          </div>
+                                      </div>
+                                   
+                                      
+                                   
+                                    </BaseCardShadow>
+                             
+  
+          </div>
+        </div>
+      </div>
+  
+      
+      
+    </main>
+  </template>
+  
+  <script>
+  
+  
+  import axios from "axios";
+  
+  import BaseHeaderNoButton from '../../components/welcomepage/BaseHeaderNoButton.vue'
+  import BaseButton from "../../components/BaseButton.vue";
+  import BaseCardShadow from '../../components/BaseCardShadow.vue';
+  
+  export default {
+    components: {
+      BaseButton,
+      BaseHeaderNoButton,
+      BaseCardShadow,
+    },
+
+
+    data() {
+      return {
+        form:{
+          email: '',
+       
+        },
+        error: {},
+        requestError: '',
+        isLoading: false,
+      }
+    },
+
+    methods: {
+    async   resetPassword(){
+      
+      }
+    }
+  
+   
+  };
+  </script>
+  
+  <style scoped>
+  
+  .mb-3 button{
+    outline: none;
+  }
+  main {
+  
+    min-height: 100vh;
+  }
+  section {
+    padding: 0;
+    margin: 0;
+  }
+  
+  .error-border {
+      border: 1px solid red;
+    }
+    .error-card {
+      padding: 2px 4px;
+      color: red;
+      font-size: 14px;
+      display: inline-block;
+      border-radius: 4px;
+    }
+  </style>
+  
