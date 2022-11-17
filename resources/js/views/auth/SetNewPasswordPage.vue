@@ -27,6 +27,7 @@
                                   type="email"
                                    placeholder="Email"
                                    v-model="form.email"
+                                   readonly
                                    >
                               </div>
                               <div class="error-card" v-if="!!error.email">
@@ -124,6 +125,7 @@ export default {
         token: '',
         password:'',
         password_confirmation:'',
+        actual_email: '',
       },
      
       error: {},
@@ -168,6 +170,7 @@ export default {
       if(this.$route.query.email && this.$route.query.token){
 
         this.form.email = this.$route.query.email;
+        this.form.actual_email = this.$route.query.email;
         this.form.token = this.$route.query.token;
         
        

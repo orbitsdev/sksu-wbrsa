@@ -42,7 +42,7 @@
                             <div class="mt-2"></div>
                             <a href="/forgot-password" > Forgot password?</a>
                             <br>
-                            <a href="/show-reset-password-email" > Show Reset Email</a>
+                            <!-- <a href="/show-reset-password-email" > Show Reset Email</a> -->
                           </div>
               
 
