@@ -12,7 +12,7 @@
                           <img src="../../../../public/loginpage/assets/images/logo.svg">
                       </div> 
                    
-                      <form @submit.prevent="resetPassword" class="login-form">
+                      <form @submit.prevent="sendEmailForRequestPassword" class="login-form">
   
                            
                             <div class="inp mb-3">
@@ -35,7 +35,7 @@
                 <!-- <base-spinner></base-spinner> -->
                 <base-spinner v-if="isLoading"></base-spinner>
                 <div class=" mt-2" v-else>
-                    <BaseButton> Reset Password </BaseButton>
+                    <BaseButton> Send Request </BaseButton>
                   </div>
               </form>
              
@@ -56,8 +56,15 @@
         </div>
       </div>
   
+
       
-      
+<teleport to="#app">
+
+
+  <BaseErrorDialog v-if="!!requestError" :dialog="!!requestError" @close="clearError" :status="requestError.request.status.toString()" :message="JSON.parse(requestError.request.response)[0]" :buttontext="'OK'"> </BaseErrorDialog>
+
+     
+  </teleport>
     </main>
   </template>
   
@@ -69,12 +76,13 @@
   import BaseHeaderNoButton from '../../components/welcomepage/BaseHeaderNoButton.vue'
   import BaseButton from "../../components/BaseButton.vue";
   import BaseCardShadow from '../../components/BaseCardShadow.vue';
-  
+  import BaseErrorDialog from '../../components/dialogs/BaseErrorDialog.vue';
   export default {
     components: {
       BaseButton,
       BaseHeaderNoButton,
       BaseCardShadow,
+      BaseErrorDialog,
     },
 
 
@@ -91,20 +99,31 @@
     },
 
     methods: {
-    async   resetPassword(){
-      this.isLoading = true;
-        await axios.post('api/resetpassword', this.form).then(res=>{
-          console.log(res);
-        }).catch(err=>{
 
+      clearError(){
+        this.requestError = null;
+        this.error ={};
+      },
+    async  sendEmailForRequestPassword(){
+        
+
+      this.isLoading = true;
+        await axios.post('api/request-password-reset', this.form).then(res=>{
+          console.log(res);
+          this.$router.replace(`/request-succesfully-sent/${res.data}`);
+        }).catch(err=>{
           if (err.response.status === 422) {
             this.error = err.response.data.errors;
           } else {
-            this.requestError = err;
+
+            console.log(err);
+           this.requestError = err;
+            
           }
         }).finally(()=>{
           this.isLoading = false;
         });
+        
       }
     }
   

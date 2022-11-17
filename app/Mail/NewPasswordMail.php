@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -19,9 +20,14 @@ class NewPasswordMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
+    public $user;
+    public $token;
+    public $set_new_password_url;
+    public function __construct(User $user, $token, $set_new_password_url)
+    {   
+        $this->user = $user;
+        $this->token = $token;
+        $this->set_new_password_url = $set_new_password_url;
     }
 
     /**
@@ -32,7 +38,7 @@ class NewPasswordMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            
+
             subject: 'Password Reset',
         );
     }

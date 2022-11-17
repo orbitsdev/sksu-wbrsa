@@ -39,7 +39,7 @@
     min-height: 100vh;
     min-width: 100%;
     background: #F8FAFC;
-
+    z-index: 2000;
 }
 @keyframes arrow-spin {
     100% {

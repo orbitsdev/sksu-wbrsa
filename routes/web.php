@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Mail\NewPasswordController;
+use App\Http\Controllers\Mail\NewPasswordMailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,8 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/newpassword', [NewPasswordController::class, 'showNewPasswordEmail']);
+ Route::get('/show-reset-password-email', [NewPasswordMailController::class, 'showPage']);
+ Route::get('/social', [NewPasswordMailController::class, 'hasProvider']);
 
 
 

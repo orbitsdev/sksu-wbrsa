@@ -33,14 +33,16 @@
                               <input class="form-control shadow-none" v-if="showPassword" type="text" placeholder="Password" v-model="form.password">
                               <input class="form-control shadow-none"  v-else type="password" placeholder="Password" v-model="form.password">
                               <button id="2" tabindex="-2" @click.prevent="showPassword=!showPassword" class="input-group-text" >
-                                <span> <i :class="{'fa-regular fa-eye-slash': showPassword, 'fa-regular fa-eye': !showPassword }"></i> </span>
+                                <span> <i :class="{'fa-regular fa-eye-slash': !showPassword, 'fa-regular fa-eye': showPassword }"></i> </span>
                               </button>
                             </div>
                             <div class="error-card" v-if="!!error.password">
                               {{ error.password[0] }}
                             </div>
                             <div class="mt-2"></div>
-                            <router-link to="/forgotpassword" > Forgot password?</router-link>
+                            <a href="/forgot-password" > Forgot password?</a>
+                            <br>
+                            <a href="/show-reset-password-email" > Show Reset Email</a>
                           </div>
               
 

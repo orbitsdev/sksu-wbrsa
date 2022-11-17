@@ -8,7 +8,7 @@
     overlay-color="rgba(0,0,0,0.5)"
     v-model="dialog" @close="this.$emit('close')" transition="bounce"  
     persistent
-    :width="400">
+    :width="360">
     <Vue3Lottie :animationData="AstronautJSON" :height="240" :width="380" />
     
     <div class="message">
@@ -22,7 +22,7 @@
         class="mr2 error-button"
         @click="this.$emit('close')"
         bg-color="error">
-        TRY AGAIN
+       {{ buttontext }}
     </w-button>    
 </div>
 
@@ -62,6 +62,11 @@ import AstronautJSON from '../../../../public/assets/90333-error.json';
                 default: 'Error'
             },
 
+            buttontext: {
+                type: String,
+                required: false,
+                default: 'TRY AGAIN'
+            }
             
             
         },

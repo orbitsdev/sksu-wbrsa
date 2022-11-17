@@ -61,7 +61,7 @@
                                     <input class="form-control shadow-none" v-if="showPassword" type="text" placeholder="Password" v-model="form.password">
                                     <input class="form-control shadow-none"  v-else type="password" placeholder="Password" v-model="form.password">
                                     <button id="2" tabindex="-2" @click.prevent="showPassword=!showPassword" class="input-group-text" >
-                                        <span> <i :class="{'fa-regular fa-eye-slash': showPassword, 'fa-regular fa-eye': !showPassword }"></i> </span>
+                                        <span> <i :class="{'fa-regular fa-eye-slash': !showPassword, 'fa-regular fa-eye': showPassword }"></i> </span>
                                     </button>
                                 </div>
                                 <div class="error-card" v-if="!!error.password">
@@ -73,7 +73,7 @@
                                     <input class="form-control shadow-none" v-if="showConfirmPassword" type="text" placeholder="Confirm Password" v-model="form.password_confirmation">
                                     <input class="form-control shadow-none"  v-else type="password" placeholder="Confirm Password" v-model="form.password_confirmation">
                                     <button  id="1" tabindex="-1"  @click.prevent="showConfirmPassword=!showConfirmPassword" class="input-group-text">
-                                        <span> <i :class="{'fa-regular fa-eye-slash': showConfirmPassword, 'fa-regular fa-eye': !showConfirmPassword }"></i> </span>
+                                        <span> <i :class="{'fa-regular fa-eye-slash': !showConfirmPassword, 'fa-regular fa-eye': showConfirmPassword }"></i> </span>
                                     </button>
                                 </div>
                             </div>
@@ -152,11 +152,11 @@ import BaseCardShadow from '../../components/BaseCardShadow.vue'
     data() {
       return {
         form: {
-          first_name: "",
-          last_name: "",
-          email: "",
-          password: "",
-          password_confirmation: "",
+          first_name: "brian",
+          last_name: "orbino",
+          email: "admin@gmail.com",
+          password: "@admin123",
+          password_confirmation: "@admin123",
         },
   
         isRegisterLoading: false,
