@@ -2,7 +2,7 @@
 
 
 <template>
-    <div>
+   
         <w-app>
 
             
@@ -12,7 +12,7 @@
                 </transition>
             </router-view>
         </w-app>        
-        </div>
+      
     
 </template>
 

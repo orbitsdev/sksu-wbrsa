@@ -1,6 +1,6 @@
 <template>
     <div >
-            Osas
+            Osas Index
     </div>
 </template>
 

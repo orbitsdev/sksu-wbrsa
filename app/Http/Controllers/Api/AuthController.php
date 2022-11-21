@@ -35,7 +35,7 @@ class AuthController extends Controller
     return response()->json(['msg'=> 'Succesfuly logout']);
     }
 
-    public function login(Request $request){
+public function login(Request $request){
 
         $request->validate([
             'email' => 'required|email',

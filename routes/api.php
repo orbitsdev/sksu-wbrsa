@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\GoogleController;
+use App\Http\Controllers\Api\ImageController;
+use App\Http\Controllers\Api\SchoolController;
 use App\Http\Controllers\Mail\NewPasswordMailController;
 
 
@@ -25,25 +27,26 @@ Route::group( ['middleware'=> ['auth:sanctum'] ,'controller'=> UsersController::
     Route::get('/users', 'getUsers');
 });
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-//testing
+Route::post('/upload/image', function(){
+    return response()->json('success');
+});
+// TESTING
 Route::post('/error', [AuthController::class , 'error']);
+
+// AUTHENTICATION
 Route::post('/login', [AuthController::class , 'login']);
 Route::post('/register', [AuthController::class , 'register']);
 Route::post('/logout', [AuthController::class , 'logout'])->middleware('auth:sanctum');
-
 // RESET PASSWORD
 Route::post('/request-password-reset', [NewPasswordMailController::class, 'sendEmailForPasswordReset']);
 Route::post('/validate-credentials', [NewPasswordMailController::class, 'validateCredentials']);
 Route::post('/set-password', [NewPasswordMailController::class, 'setNewPassword']);
-
-
-
-
-
+// GOOGLE SIGN IN
 Route::get('/authorize/{provider}/redirect', [GoogleController::class ,'redirectToProvider']);
 Route::get('/authorize/{provider}/callback', [GoogleController::class ,'handleProviderCallback']);
+
+// MANAGE SCHOOL
+
+Route::resource('schools', SchoolController::class);
+
 

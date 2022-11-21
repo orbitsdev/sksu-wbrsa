@@ -14,7 +14,7 @@
     <div class="message">
         <h1 class="text-center text-danger"> Ooops! </h1>
         <p class="text-center">
-            {{ message }} 
+        {{ message }}
         </p>
     <div class="error-wrapper">
 
@@ -24,7 +24,8 @@
         bg-color="error">
        {{ buttontext }}
     </w-button>    
-</div>
+
+        </div>
 
 </div>
 
