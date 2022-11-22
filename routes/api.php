@@ -45,6 +45,8 @@ Route::post('/set-password', [NewPasswordMailController::class, 'setNewPassword'
 Route::get('/authorize/{provider}/redirect', [GoogleController::class ,'redirectToProvider']);
 Route::get('/authorize/{provider}/callback', [GoogleController::class ,'handleProviderCallback']);
 
+Route::post('/upload/school',  [ImageController::class, 'upload']);
+
 // MANAGE SCHOOL
 
 Route::resource('schools', SchoolController::class);

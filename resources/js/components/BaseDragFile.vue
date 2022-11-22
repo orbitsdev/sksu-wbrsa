@@ -13,18 +13,15 @@
     :server="{
         url: '',
         process: {
-            url: '/upload-school',
+            url: 'api/upload/school',
             timeout: 7000,
             methods: 'POST',
-            headers: {
-                'Authorization': 'Bearer '+authtoken,
+            withCredentials: true,
+            headers:{
+                'Authorization': 'Bearer '+authtoken
             },
-
-            withCredentials: false,
             onLoad: handleFilePondLoad,
-            onerror: ()=>{
-
-            }
+            onerror: ()=> {},
 
         }
         
@@ -81,8 +78,11 @@ import vueFilePond from 'vue-filepond';
                 console.log('File Pond Initalize');
             },
              
-            handleFilePondLoad(){
-
+            handleFilePondLoad(response){
+                console.log(response);
+            },
+            handleError(err){
+                console.log(err);
             }
         }
     }

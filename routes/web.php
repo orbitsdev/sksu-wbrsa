@@ -23,7 +23,8 @@ Route::get('/', function () {
 
  Route::get('/show-reset-password-email', [NewPasswordMailController::class, 'showPage']);
  Route::get('/social', [NewPasswordMailController::class, 'hasProvider']);
- Route::post('/upload-school',  [ImageController::class, 'upload']);
+//  Route::post('/upload-school',  [ImageController::class, 'upload']);
+
 
 Route::get('/{any}' , function(){
     return view('index');
