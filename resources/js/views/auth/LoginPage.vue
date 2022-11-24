@@ -13,39 +13,10 @@
                     </div>
                     <form @submit.prevent="loginUser" class="login-form">
 
+                         <BaseInput label="Email" type="email" v-model="form.email" :error="error.email"/>
+                         <BasePasswordInput @showPassword="show=!show" :show="show" label="Password"  v-model="form.password" :error="error.password"/>
+                         <router-link to="/forgot-password"> Forgot Password</router-link>
                          
-                          <div class="inp mb-3">
-                              <div class="input-group ">
-                                  <input 
-                                  :class="['form-control shadow-none', { 'error-border': emailError }]"
-                                  
-                                  type="email"
-                                   placeholder="Email"
-                                   v-model="form.email"
-                                   >
-                              </div>
-                              <div class="error-card" v-if="!!error.email">
-                                  {{ error.email[0] }}
-                                </div>
-                          </div>
-                          <div class="inp mb-3">
-                            <div class="input-group ">
-                              <input class="form-control shadow-none" v-if="showPassword" type="text" placeholder="Password" v-model="form.password">
-                              <input class="form-control shadow-none"  v-else type="password" placeholder="Password" v-model="form.password">
-                              <button id="2" tabindex="-2" @click.prevent="showPassword=!showPassword" class="input-group-text" >
-                                <span> <i :class="{'fa-regular fa-eye-slash': !showPassword, 'fa-regular fa-eye': showPassword }"></i> </span>
-                              </button>
-                            </div>
-                            <div class="error-card" v-if="!!error.password">
-                              {{ error.password[0] }}
-                            </div>
-                            <div class="mt-2"></div>
-                            <a href="/forgot-password" > Forgot password?</a>
-                            <br>
-                            <!-- <a href="/show-reset-password-email" > Show Reset Email</a> -->
-                          </div>
-              
-
               <!-- <base-spinner></base-spinner> -->
               <base-spinner v-if="isLoading"></base-spinner>
               <div class=" mt-2" v-else>
@@ -56,17 +27,13 @@
             <div class=" text-center my-2 ">
               or
           </div>
-            <base-spinner v-if="isGoogleLoading"></base-spinner>
-              <GoogleButton v-else @click="continueWithSocialAccount" />
 
-           
+            <base-spinner v-if="isGoogleLoading"></base-spinner>
+              <GoogleButton v-else @click="continueWithSocialAccount" />           
                                         <div class="text-center mt-3 font-weight-light">
                                           Dont have an account? <router-link to="/register"> Signup </router-link>
                                         </div>
                                     </div>
-                                 
-                                    
-                                 
                                   </BaseCardShadow>
                            
 
@@ -78,7 +45,7 @@
 
 <teleport to="#app">
 
-<BaseErrorDialog v-if="!!requestError" :dialog="!!requestError" @close="clearError" :status="requestError.request.status.toString()" :message="requestError.request.statusText"> </BaseErrorDialog>
+  <BaseErrorDialog v-if="!!requestError" :dialog="!!requestError" @close="clearError" :status="requestError.request.status.toString()" :message="requestError.request.statusText"> </BaseErrorDialog>
   
 </teleport>
     
@@ -95,15 +62,19 @@ import BaseButton from "../../components/BaseButton.vue";
 import GoogleButton from "../../components/GoogleButton.vue";
 import BaseCardShadow from '../../components/BaseCardShadow.vue';
 import BaseErrorDialog from '../../components/dialogs/BaseErrorDialog.vue';
-
+import BaseInput from '../../components/BaseInput.vue';
+import BasePasswordInput from '../../components/BasePasswordInput.vue';
 export default {
   components: {
+    
     BaseButton,
     GoogleButton,
     BaseHeaderNoButton,
     BaseCardShadow,
     BaseErrorDialog,
     BaseSpinner,
+    BaseInput,
+    BasePasswordInput,
   },
 
   computed: {
@@ -135,7 +106,7 @@ export default {
       isGoogleLoading: false,
       error: {},
       requestError: null,
-      showPassword:false,
+      show:false,
       dialog:false,
     };
   },
@@ -208,17 +179,6 @@ section {
   padding: 0;
   margin: 0;
 }
-
-.error-border {
-    border: 1px solid red;
-  }
-  .error-card {
-    padding: 2px 4px;
-    color: red;
-    font-size: 14px;
-    display: inline-block;
-    border-radius: 4px;
-  }
 
 /* LOIGN PAGE STYLE */
 

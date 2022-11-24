@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('schools', function (Blueprint $table) {
+        Schema::create('temporary_storages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('address');  
-            $table->string('local_path')->nullable();  
-            $table->string('url')->nullable();  
+            $table->string('folder');
+            $table->string('file');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('schools');
+        Schema::dropIfExists('temporary_storages');
     }
 };

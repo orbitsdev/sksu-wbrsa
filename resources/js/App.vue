@@ -4,8 +4,6 @@
 <template>
    
         <w-app>
-
-            
             <router-view v-slot="slotProps">
                 <transition mode="out-in" name="route">
                     <component :is="slotProps.Component"></component>

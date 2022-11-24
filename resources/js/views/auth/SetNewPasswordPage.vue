@@ -18,45 +18,12 @@
                 
                     <form @submit.prevent="setNewPassword" class="login-form">
 
-                         
-                          <div class="inp mb-3">
-                              <div class="input-group ">
-                                  <input 
-                                  :class="['form-control shadow-none', { 'error-border': error.email }]"
-                                  
-                                  type="email"
-                                   placeholder="Email"
-                                   v-model="form.email"
-                                   readonly
-                                   >
-                              </div>
-                              <div class="error-card" v-if="!!error.email">
-                                  {{ error.email[0] }}
-                                </div>
-                          </div>
-                         
-                          <div class="inp mb-3">
-                            <div class="input-group ">
-                                <input class="form-control shadow-none" v-if="showPassword" type="text" placeholder="New password" v-model="form.password">
-                                <input class="form-control shadow-none"  v-else type="password" placeholder="New password" v-model="form.password">
-                                <button id="2" tabindex="-2" @click.prevent="showPassword=!showPassword" class="input-group-text" >
-                                    <span> <i :class="{'fa-regular fa-eye-slash': !showPassword, 'fa-regular fa-eye': showPassword }"></i> </span>
-                                </button>
-                            </div>
-                            <div class="error-card" v-if="!!error.password">
-                                {{ error.password[0] }}
-                              </div>
-                        </div>
+                      <BaseInput label="Email" type="email" v-model="form.email" :error="error.email"/>
+                      <BasePasswordInput @showPassword="showPassword=!showPassword" :show="showPassword" label="Password"  v-model="form.password" :error="error.password"/>
+                      <BasePasswordInput @showPassword="showConfirmPassword=!showConfirmPassword" :show="showConfirmPassword" label="ConfirmPassword"  v-model="form.password_confirmation" />
 
-                        <div class="inp mb-3">
-                          <div class="input-group ">
-                              <input class="form-control shadow-none" v-if="showConfirmPassword" type="text" placeholder="Confirm Password" v-model="form.password_confirmation">
-                              <input class="form-control shadow-none"  v-else type="password" placeholder="Confirm Password" v-model="form.password_confirmation">
-                              <button  id="1" tabindex="-1"  @click.prevent="showConfirmPassword=!showConfirmPassword" class="input-group-text">
-                                  <span> <i :class="{'fa-regular fa-eye-slash': !showConfirmPassword, 'fa-regular fa-eye': showConfirmPassword }"></i> </span>
-                              </button>
-                          </div>
-                      </div>
+                         
+                       
                          
               
 
@@ -105,13 +72,17 @@ import BaseHeaderNoButton from '../../components/welcomepage/BaseHeaderNoButton.
 import BaseButton from "../../components/BaseButton.vue";
 import BaseCardShadow from '../../components/BaseCardShadow.vue';
 import BaseErrorDialog from '../../components/dialogs/BaseErrorDialog.vue';
+import BaseInput from '../../components/BaseInput.vue';
+import BasePasswordInput from '../../components/BasePasswordInput.vue';
 export default {
+
   components: {
     BaseButton,
     BaseHeaderNoButton,
     BaseCardShadow,
     BaseErrorDialog,
-    BaseScreenLoading,
+    BaseInput,
+    BasePasswordInput,
     
   },
 
@@ -201,14 +172,4 @@ section {
   margin: 0;
 }
 
-.error-border {
-    border: 1px solid red;
-  }
-  .error-card {
-    padding: 2px 4px;
-    color: red;
-    font-size: 14px;
-    display: inline-block;
-    border-radius: 4px;
-  }
 </style>

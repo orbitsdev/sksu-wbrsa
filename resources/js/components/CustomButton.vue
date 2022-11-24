@@ -1,11 +1,21 @@
 
 
 <template>
-    <button class="btn btn-succes"> <slot>Click Me</slot></button>
+    <button :class="['btn ', mode ] "> 
+
+         <slot>Click Me</slot></button>
 </template>
 
 <script>
     export default {
+
+        props: {
+            mode: {
+                type: String,
+                default: 'gray',
+                required: false,
+            }
+        }
         
     }
 </script>
@@ -14,17 +24,71 @@
 
 button{
     padding: 8px 12px;
-    background: #327959;
-    color:white;
     outline: none;
-    border: none;
     border-radius: 6px;
     transition:  all 0.1s ease;
     
 }
-button:hover{
-    transform: scale(0.98);
-    background: #69dca8;
+
+
+.green{
+    background: #00BFA6;
+    color:white;
+    border: none;
 
 }
+
+.green:hover{
+    transform: scale(0.98);
+    background: #4da57e;
+}
+
+.blue{
+    background: #00B0FF;
+    color:white;
+    border: none;
+}
+
+.blue:hover{
+    background: #07a1e8;
+    
+    
+}
+
+.red{
+    
+    background:#F50057;
+    color:white;
+}
+
+
+
+.red:hover{
+    
+    
+    color:white;
+    background:#d7044e;
+    
+}
+
+.gray{
+    background:#eeeff1;
+}
+
+.gray:hover{
+    
+    background:#e7e8ec;
+}
+
+
+.red-o{
+    border:1px solid #d7044e;
+    background:#ffffff;
+    color: #d7044e;
+}
+
+
+
+
+
 </style>

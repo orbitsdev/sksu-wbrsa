@@ -45,10 +45,11 @@ Route::post('/set-password', [NewPasswordMailController::class, 'setNewPassword'
 Route::get('/authorize/{provider}/redirect', [GoogleController::class ,'redirectToProvider']);
 Route::get('/authorize/{provider}/callback', [GoogleController::class ,'handleProviderCallback']);
 
-Route::post('/upload/school',  [ImageController::class, 'upload']);
+// DROP AND DROP FILE
+Route::post('/image/upload/local', [ImageController::class, 'uploadToLocal']);
+Route::delete('/image/upload/revert', [ImageController::class, 'deleteFromLocal']);
 
 // MANAGE SCHOOL
-
 Route::resource('schools', SchoolController::class);
 
 

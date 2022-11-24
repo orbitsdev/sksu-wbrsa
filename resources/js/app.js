@@ -27,8 +27,11 @@ import router from './router/router';
 import store from './store/store';
 import BaseErrorDialog from './components/dialogs/BaseErrorDialog.vue';
 import CustomButton from './components/CustomButton.vue';
-import BaseDragFile from './components/BaseDragFile.vue';
-
+import BaseTableSpinner from './components/BaseTableSpinner.vue';
+import BaseCircularLoader from './components/BaseCircularLoader.vue';
+import NoRecord from './components/NoRecord.vue';
+import IconButton from './components/IconButton.vue';
+import DragAndDropFiles from './components/DragAndDropFiles.vue';
 // USE
 
 const app = createApp({});
@@ -51,6 +54,10 @@ app.component('base-header-no-button', BaseHeaderNoButton);
 app.component('base-card-shadow', BaseCardShadow);
 app.component('base-error-dialog', BaseErrorDialog);
 app.component('custom-button', CustomButton);
-app.component('base-drag-file', BaseDragFile);
+app.component('base-table-spinner', BaseTableSpinner);
+app.component('base-circular-loader', BaseCircularLoader);
+app.component('no-record', NoRecord);
+app.component('icon-button', IconButton );
+app.component('drag-and-drop-files', DragAndDropFiles );
 
 app.mount('#app');

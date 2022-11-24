@@ -12,23 +12,10 @@
                           <img src="../../../../public/loginpage/assets/images/logo.svg">
                       </div> 
                    
-                      <form @submit.prevent="sendEmailForRequestPassword" class="login-form">
-  
+                      <form @submit.prevent="sendEmailForRequestPassword"  class="login-form">
+                        <BaseInput label="Email" type="email" :showLabel="false" v-model="form.email" :error="error.email"/>
                            
-                            <div class="inp mb-3">
-                                <div class="input-group ">
-                                    <input 
-                                    :class="['form-control shadow-none', { 'error-border': error.email }]"
-                                    
-                                    type="email"
-                                     placeholder="Email"
-                                     v-model="form.email"
-                                     >
-                                </div>
-                                <div class="error-card" v-if="!!error.email">
-                                    {{ error.email[0] }}
-                                  </div>
-                            </div>
+                           
                            
                 
   
@@ -77,19 +64,22 @@
   import BaseButton from "../../components/BaseButton.vue";
   import BaseCardShadow from '../../components/BaseCardShadow.vue';
   import BaseErrorDialog from '../../components/dialogs/BaseErrorDialog.vue';
+  import BaseInput from "../../components/BaseInput.vue";
+  
   export default {
     components: {
       BaseButton,
       BaseHeaderNoButton,
       BaseCardShadow,
       BaseErrorDialog,
+      BaseInput,
     },
 
 
     data() {
       return {
         form:{
-          email: 'admin@gmail.com',
+          email: '',
        
         },
         error: {},
@@ -145,15 +135,5 @@
     margin: 0;
   }
   
-  .error-border {
-      border: 1px solid red;
-    }
-    .error-card {
-      padding: 2px 4px;
-      color: red;
-      font-size: 14px;
-      display: inline-block;
-      border-radius: 4px;
-    }
   </style>
   

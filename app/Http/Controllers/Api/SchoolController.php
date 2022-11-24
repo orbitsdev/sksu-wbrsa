@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Image;
 use App\Models\School;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,7 +16,10 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        return response()->json('ey  test infs');
+
+            return School::with('images')->paginate(10);        
+
+        
     }
 
     /**
@@ -40,8 +44,22 @@ class SchoolController extends Controller
                 'name'=> 'required',
                 'address'=> 'required',
             ]);
-
+            
+            
             $school = School::create($validated);
+
+
+
+            if(count($request->input('files'))>0){
+                    foreach($request->input('files') as $file){
+                        $school->images()->create([
+                            'file_name'=> $file,
+                            'local_path'=> $file,
+                            'url'=> null,
+                        ]);
+                    }      
+            }
+          
 
             if($school != null){
                 return response()->json('School Added');
@@ -83,7 +101,34 @@ class SchoolController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+
+        $validated = $request->validate([
+            'name'=> 'required',
+            'address'=> 'required'
+        ]);
+
+         $school = School::find($id);
+
+         if( $school->update($validated)){            
+             return response()->json('success');
+         }else{
+            return response()->json('failed');
+         }
+       
+        // $school->adress = $request->name;
+        
+        // if($school->save){
+
+        //     return response()->json('succes');
+            
+        // }else{
+        //     return response()->json('failed');
+        // }
+
+
+
+        
     }
 
     /**
@@ -94,12 +139,19 @@ class SchoolController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $school = School::find($id);
+            
+        if($school->delete()){
+            return response()->json('deleted');
+        }else{
+            return response()->json('failed' , 500);
+            
+        }
     }
 
     public function uploadImage(Request $request){
 
-        return response()->json('success');
+        return response()->json($request->all());
         // if($request->hasFile('imageFilepond')){
         //     return $request->file('imageFilepond')->store('uploads/images', 'public');
         // }

@@ -13,71 +13,12 @@
                       </div>
                       <form @submit.prevent="registerUser" class="login-form">
   
-                            <div class="inp mb-3">
-                                <div >
-
-                                    <input
-                                    :class="['form-control shadow-none', { 'error-border': firstnameError }]"
-                                    type="text" 
-                                    placeholder="First name"
-                                    v-model="form.first_name"
-                                    >
-                                </div>
-                                <div class="error-card" v-if="!!error.first_name">
-                                    {{ error.first_name[0] }}
-                                  </div>
-                                
-                            </div>
-                            
-                            <div class="inp mb-3">
-                                <div class="input-group ">
-                                    <input 
-                                    :class="['form-control shadow-none', { 'error-border': lastnameError }]"
-                                    type="text" placeholder="Last name" 
-                                    v-model="form.last_name"
-                                    >
-                                </div>
-                                <div class="error-card" v-if="!!error.last_name">
-                                    {{ error.last_name[0] }}
-                                  </div>
-                            </div>
-                            <div class="inp mb-3">
-                                <div class="input-group ">
-                                    <input 
-                                    :class="['form-control shadow-none', { 'error-border': emailError }]"
-                                    
-                                    type="email"
-                                     placeholder="Email"
-                                     v-model="form.email"
-                                     >
-                                </div>
-                                <div class="error-card" v-if="!!error.email">
-                                    {{ error.email[0] }}
-                                  </div>
-                            </div>
-                          
-                            <div class="inp mb-3">
-                                <div class="input-group ">
-                                    <input class="form-control shadow-none" v-if="showPassword" type="text" placeholder="Password" v-model="form.password">
-                                    <input class="form-control shadow-none"  v-else type="password" placeholder="Password" v-model="form.password">
-                                    <button id="2" tabindex="-2" @click.prevent="showPassword=!showPassword" class="input-group-text" >
-                                        <span> <i :class="{'fa-regular fa-eye-slash': !showPassword, 'fa-regular fa-eye': showPassword }"></i> </span>
-                                    </button>
-                                </div>
-                                <div class="error-card" v-if="!!error.password">
-                                    {{ error.password[0] }}
-                                  </div>
-                            </div>
-                            <div class="inp mb-3">
-                                <div class="input-group ">
-                                    <input class="form-control shadow-none" v-if="showConfirmPassword" type="text" placeholder="Confirm Password" v-model="form.password_confirmation">
-                                    <input class="form-control shadow-none"  v-else type="password" placeholder="Confirm Password" v-model="form.password_confirmation">
-                                    <button  id="1" tabindex="-1"  @click.prevent="showConfirmPassword=!showConfirmPassword" class="input-group-text">
-                                        <span> <i :class="{'fa-regular fa-eye-slash': !showConfirmPassword, 'fa-regular fa-eye': showConfirmPassword }"></i> </span>
-                                    </button>
-                                </div>
-                            </div>
-                
+                        <BaseInput label="Firstname"  v-model="form.first_name" :error="error.first_name"/>
+                        <BaseInput label="Lastname"  v-model="form.last_name" :error="error.last_name"/>
+                        <BaseInput label="Email" type="email" v-model="form.email" :error="error.email"/>
+                        <BasePasswordInput @showPassword="showPassword=!showPassword" :show="showPassword" label="Password"  v-model="form.password" :error="error.password"/>
+                        <BasePasswordInput @showPassword="showConfirmPassword=!showConfirmPassword" :show="showConfirmPassword" label="ConfirmPassword"  v-model="form.password_confirmation" />
+                        
   
                 <!-- <base-spinner></base-spinner> -->
                 <base-spinner v-if="isRegisterLoading"></base-spinner>
@@ -118,8 +59,9 @@
   import BaseHeaderNoButton from '../../components/welcomepage/BaseHeaderNoButton.vue'
 import BaseButton from "../../components/BaseButton.vue";
 import GoogleButton from "../../components/GoogleButton.vue";
-import BaseCardShadow from '../../components/BaseCardShadow.vue'
-
+import BaseCardShadow from '../../components/BaseCardShadow.vue';
+import BaseInput from '../../components/BaseInput.vue';
+import BasePasswordInput from '../../components/BasePasswordInput.vue';
   
   export default {
     components: {
@@ -129,24 +71,11 @@ import BaseCardShadow from '../../components/BaseCardShadow.vue'
     BaseHeaderNoButton,
     BaseCardShadow,
     BaseErrorDialog,
+    BaseInput,
+    BasePasswordInput,
 
     },
     computed: {
-      firstnameError() {
-        return !!this.error.first_name;
-      },
-      lastnameError() {
-        return !!this.error.last_name;
-      },
-      emailError() {
-        return !!this.error.email;
-      },
-      passwordError() {
-        return !!this.error.password;
-      },
-      confirmpasswordError() {
-        return !!this.error.password_confirmation;
-      },
     },
   
     data() {
@@ -265,16 +194,6 @@ label{
     margin: 0;
   }
   
-  .error-border {
-      border: 1px solid red;
-    }
-    .error-card {
-      padding: 2px 4px;
-      color: red;
-      font-size: 14px;
-      display: inline-block;
-      border-radius: 4px;
-    }
 
 
     /*-------------------------------------------------------------------

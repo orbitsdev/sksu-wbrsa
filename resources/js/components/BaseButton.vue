@@ -53,27 +53,27 @@
     outline: none;
     border:none;
     color: white;
-    background: #429460;
-    border-color: #429460;
+    background: #00BFA6;
+    border-color: #00BFA6;
     border-radius: 4px;
     transition: all 0.1s ease;
 }
 
 .button:hover{
     transform: scale(0.98);
-    background: #65b181;
+    background: #0ba590;
 }
 
 
 .outline{
-    color: #327959;
+    color: #00BFA6;
     background: white;
-    border: 0.5px solid #327959;
+    border: 0.5px solid #00BFA6;
  
 }
 
 .outline:hover{
-    background: #327959;
+    background: #1aa391;
     color: white;
 }
 

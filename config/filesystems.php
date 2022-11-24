@@ -56,6 +56,27 @@ return [
             'throw' => false,
         ],
 
+       
+
+        'oss' => [
+            'driver'        => 'aliyun',
+            'access_id'     => env('OSS_ACCESS_KEY_ID'),
+            'access_key'    => env('OSS_SECRET_ACCESS_KEY'),
+            'bucket'        => env('OSS_BUCKET'),
+            'endpoint'      => env('OSS_ENDPOINT'),
+            'region'        => env('OSS_REGION'),
+            'acs'           => env('OSS_ACS'),
+            'user'          => env('OSS_USER'),
+            'is_ssl'        => true,
+            'is_cname'      => false,
+            'cdn_domain'    => '',
+            'timeout'       => 3600,
+        ],
+
+        'my_files'=> [
+            'driver'=> 'local',
+            'root'=> public_path().'/'
+        ]
     ],
 
     /*
