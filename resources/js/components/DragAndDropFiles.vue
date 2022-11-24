@@ -1,17 +1,25 @@
 
 
-
-        <!-- revert: '/api/image/upload/revert' -->
-
+<!-- revert: {
+    url: '/api/image/upload/revert',
+    methods: 'DELETE',
+    withCredentials: true,
+    headers:{
+        'Authorization': 'Bearer '+ authtoken
+    },
+    
+} -->
 
 <template>
-
+    <div>{{ filetype }}</div>
+    <div>{{ uploadType }}</div>
+    
     <file-pond
-    name="images"   
+    name="files"   
     class="filepond"
     ref="pond"
-    accepted-file-types="image/jpeg, image/png" 
-    allow-multiple="true"  
+    :accepted-file-types="filetype" 
+    :allow-multiple="uploadType"  
     :server="{
         
         url: '',
@@ -27,10 +35,10 @@
             onload: handleFilePondLoad,           
             onerror: ()=>{}
         },
-        revert: '/api/image/upload/revert'
+        revert: handleFilePondRevert
     }"
 
-    :files="myFile"
+    :files="files"
 
     @init="handleFilePondInit"
     @activatefile="handeFilePondActive"
@@ -70,23 +78,37 @@ import vueFilePond from 'vue-filepond';
     export default {
 
         props: {
-            passData: {
+            passFiles: {
                 type: Array,
                 default: [],
             },
+
+            filetype: {
+                type:  String,
+                required:false,
+                default: 'image/jpeg, image/png',
+            },
+            
+            uploadType: {
+                type: Boolean,
+                default: false
+            }
         },
         
         emits: ["successUpload"],
 
 
         created () {
+
             this.authtoken = localStorage.getItem('token');
  
-            if(this.passData.id !=  null){
-                
-                console.log('dadas');
+            if(this.passFiles.id !=  null){
+                    
+                // this.files = this.passFile
+                console.log('has data passed');
 
-                // this.myFile = this.passData;
+            }else{
+                console.log('no data passed');
             }
             
         },
@@ -100,7 +122,7 @@ import vueFilePond from 'vue-filepond';
         data() {
             return {
                 authtoken: null,
-                myFile:  []
+                files:  []
             }
         },        
 
@@ -110,19 +132,19 @@ import vueFilePond from 'vue-filepond';
             },
 
             handeFilePondActive(file){
-                console.log(file.filename);
-                console.log(file.serverId);
+                // console.log(file.filename);
+                // console.log(file.serverId);
             },
         
             handleFilePondInit(){
-                console.log('initialise');
+                // console.log('initialise');
             },
 
             handleFilePondLoad(response){
                 return response;
                 // console.log(response);
                 // this.$emit('successUpload', response);
-                // this.myFile.push(response);
+                // this.files.push(response);
             },
 
             handleFilePondError(response){
@@ -131,10 +153,17 @@ import vueFilePond from 'vue-filepond';
 
         
              
-             handleFilePondRevert(uniquid, load , error){
-                axiosApi.delete('/api/image/upload/revert').then(res=>{
+            handleFilePondRevert(uniquid, load , error){
+                console.log(uniquid);
+                axiosApi.delete('api/image/upload/revert', {
+                   data: {
+                    folder: uniquid 
+                   }
+                }).then(res=>{
                     console.log(res);
                 });
+
+                load();
             }   
 
          

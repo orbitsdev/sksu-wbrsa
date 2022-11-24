@@ -18,11 +18,11 @@ class ImageController extends Controller
 
     public function uploadToLocal(Request $request){
 
-        if($request->hasFile('images')){
+        if($request->hasFile('files')){
 
-            $image = $request->file('images');
+            $image = $request->file('files');
             $file_name = $image->getClientOriginalName();
-            $folder = uniqid('image', true);
+            $folder = uniqid('files', true);
             $image->storeAs('tmp/'. $folder , $file_name);
             
             TemporaryStorage::create([
@@ -45,7 +45,8 @@ class ImageController extends Controller
     public function deleteFromLocal(Request $request){
         
 
-        $tmp_file = TemporaryStorage::where('folder', $request->getContent())->first();
+
+        $tmp_file = TemporaryStorage::where('folder', $request->input('folder'))->first();
         if($tmp_file){
             
             Storage::deleteDirectory('tmp/'.$tmp_file->folder);
@@ -55,4 +56,19 @@ class ImageController extends Controller
         }
 
     }
+
+    // public function deleteFromLocal(Request $request){
+        
+
+    //     $tmp_file = TemporaryStorage::where('folder', $request->getContent())->first();
+    //     if($tmp_file){
+            
+    //         Storage::deleteDirectory('tmp/'.$tmp_file->folder);
+    //         $tmp_file->delete();
+    //         return response()->json('success');
+            
+    //     }
+
+    // }
+    
 }

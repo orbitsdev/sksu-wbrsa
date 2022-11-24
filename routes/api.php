@@ -46,8 +46,8 @@ Route::get('/authorize/{provider}/redirect', [GoogleController::class ,'redirect
 Route::get('/authorize/{provider}/callback', [GoogleController::class ,'handleProviderCallback']);
 
 // DROP AND DROP FILE
-Route::post('/image/upload/local', [ImageController::class, 'uploadToLocal']);
-Route::delete('/image/upload/revert', [ImageController::class, 'deleteFromLocal']);
+Route::post('/image/upload/local', [ImageController::class, 'uploadToLocal'])->middleware('auth:sanctum');
+Route::delete('/image/upload/revert', [ImageController::class, 'deleteFromLocal'])->middleware('auth:sanctum');
 
 // MANAGE SCHOOL
 Route::resource('schools', SchoolController::class);

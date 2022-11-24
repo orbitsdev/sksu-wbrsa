@@ -2,7 +2,7 @@
   <w-card class="cs" content-class="pa0">
 
 
-      {{ passData }}
+
     <BaseInput label="School Name" :showLabel="false"  v-model="form.name" :error="error.name"/>
     <BaseInput label="Schol Address"  :showLabel="false" v-model="form.address" :error="error.address"/>
 
@@ -49,9 +49,7 @@ export default {
 
 created () {
 
-  if(this.passData != null){
-    this.form = this.passData;
-  }
+  
   
 },
 
