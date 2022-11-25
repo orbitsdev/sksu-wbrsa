@@ -1,198 +1,248 @@
+<!-- 
 
 
-<!-- revert: {
-    url: '/api/image/upload/revert',
-    methods: 'DELETE',
-    withCredentials: true,
-    headers:{
-        'Authorization': 'Bearer '+ authtoken
-    },
-    
-} -->
+
+filetype you can use
+'image/*, application/msword, application/pdf,  text/plain , application/json, application/vnd.openxmlformats-officedocument.wordprocessingml.document' -->
 
 <template>
-    <div>{{ filetype }}</div>
-    <div>{{ uploadType }}</div>
-    
-    <file-pond
-    name="files"   
-    class="filepond"
+
+    <main>
+        <w-divider class="my6 my-1"></w-divider>
+        <div class=""> 
+            <BaseFileCard v-for="(filename, index) in  succes_files" :key="index" :text="filename" />
+        </div>
+        <w-divider class="my6 my-1"></w-divider>
+        <BaseFileCard v-if="failed_files <0" :text="'('+ failed_files+ ') Failed  '" :error="true" />
+    </main>
+
+  <file-pond
+    name="files"
+    :class="filePondStyle"
     ref="pond"
-    :accepted-file-types="filetype" 
-    :allow-multiple="uploadType"  
+    allowFileSizeValidation="true"
+    :label-idle="label"
+    :accepted-file-types="fileType"
+    :allow-multiple="multiple"
+    :maxFileSize="maxSize"
+    allowPdfPreview="false"
+    :itemInsertLocation="insertFile"
+    :pdfPreviewHeight="pdfHeight"
+    credits="false"
+    pdfComponentExtraParams="toolbar=0&view=fit&page=1"
     :server="{
-        
-        url: '',
+      url: '',
+      timeout: 7000,
+      process: {
+        url: '/api/image/upload/local',
         timeout: 7000,
-        process: {
-            url: '/api/image/upload/local',
-            timeout: 7000,
-            methods: 'POST',
-            withCredentials: true,
-            headers:{
-                'Authorization': 'Bearer '+ authtoken
-            },
-            onload: handleFilePondLoad,           
-            onerror: ()=>{}
+        methods: 'POST',
+        withCredentials: true,
+        headers: {
+          Authorization: 'Bearer ' + authtoken,
         },
-        revert: handleFilePondRevert
+        onload: handleFilePondLoad,
+        onerror: () => {},
+      },
+      revert: handleFilePondRevert,
     }"
-
     :files="files"
-
     @init="handleFilePondInit"
     @activatefile="handeFilePondActive"
     @processFiles="handleFilePondProcessFiles"
-    >
-
-    </file-pond>
-    
+  >
+  </file-pond>
 </template>
 <script>
 
+import axiosApi from "../api/axiosApi";
+import vueFilePond from "vue-filepond";
 
+// Components
+import BaseFileCard from "./BaseFileCard.vue";
 
-import axiosApi from '../api/axiosApi';
+// Import plugins
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js";
+import FilePondPluginFilePoster from "filepond-plugin-file-poster";
+import FilePondPluginImageCrop from "filepond-plugin-image-crop";
+import FilePondPluginFileImageValidateSize from "filepond-plugin-image-validate-size";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import FilePondPluginGetFile from "filepond-plugin-get-file";
+import FilePondPluginPdfPreview from "filepond-plugin-pdf-preview";
 
-import vueFilePond from 'vue-filepond';
+import FilePondPluginImageOverlay from "filepond-plugin-image-overlay";
 
-    // Import plugins
-    import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js';
-    import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js';
-    import FilePondPluginFilePoster from 'filepond-plugin-file-poster';
-    import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
+// Import styles
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
+import "filepond-plugin-get-file/dist/filepond-plugin-get-file.min.css";
+import "filepond-plugin-pdf-preview/dist/filepond-plugin-pdf-preview.min.css";
+import "filepond-plugin-image-overlay/dist/filepond-plugin-image-overlay.css";
 
-    // Import styles
-    import 'filepond/dist/filepond.min.css';
-    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
-    
+// Create FilePond component
+const FilePond = vueFilePond(
+  FilePondPluginImageCrop,
+  FilePondPluginFileValidateType,
+  FilePondPluginImagePreview,
+  FilePondPluginFileImageValidateSize,
+  FilePondPluginFileValidateSize,
+  FilePondPluginFilePoster,
+  // FilePondPluginPdfPreview ,
+  FilePondPluginImageOverlay
 
-    // Create FilePond component
-    const FilePond = vueFilePond(
-        
-        FilePondPluginImageCrop,
-        FilePondPluginFileValidateType,
-        FilePondPluginImagePreview,
-        FilePondPluginFilePoster);
+  // FilePondPluginGetFile
+);
 
-    export default {
+export default {
+  props: {
+    passFiles: {
+      type: Array,
+      default: [],
+    },
 
-        props: {
-            passFiles: {
-                type: Array,
-                default: [],
-            },
+    label: {
+      type: String,
+      required: false,
+      default: "Drop files here...",
+    },
+    passFiletype: {
+      type: String,
+      required: false,
+      default: "all",
+    },
 
-            filetype: {
-                type:  String,
-                required:false,
-                default: 'image/jpeg, image/png',
-            },
-            
-            uploadType: {
-                type: Boolean,
-                default: false
-            }
-        },
-        
-        emits: ["successUpload"],
+    multiple: {
+      type: Boolean,
+      default: true,
+    },
+    maxSize: {
+      type: String,
+      required: false,
+      default: "40MB",
+    },
+    insertFile: {
+      type: String,
+      required: false,
+      default: "before",
+    },
+    pdfHeight: {
+      type: String,
+      required: false,
+      default: "120",
+    },
+    PdfPreview: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    filePondStyle: {
+      type: String,
+      required: false,
+      default: "filepond ",
+    },
+  },
 
+  emits: ["fileIsUploaded", "fileIsDeleted"],
 
-        created () {
-
-            this.authtoken = localStorage.getItem('token');
- 
-            if(this.passFiles.id !=  null){
-                    
-                // this.files = this.passFile
-                console.log('has data passed');
-
-            }else{
-                console.log('no data passed');
-            }
-            
-        },
-        mounted() {
-
-            // console.log(token);
-        },
-        components: {
-            FilePond ,
-        },
-        data() {
-            return {
-                authtoken: null,
-                files:  []
-            }
-        },        
-
-        methods: {
-            handleFilePondProcessFiles(){
-                console.log('success');
-            },
-
-            handeFilePondActive(file){
-                // console.log(file.filename);
-                // console.log(file.serverId);
-            },
-        
-            handleFilePondInit(){
-                // console.log('initialise');
-            },
-
-            handleFilePondLoad(response){
-                return response;
-                // console.log(response);
-                // this.$emit('successUpload', response);
-                // this.files.push(response);
-            },
-
-            handleFilePondError(response){
-                console.log(response);
-            },
-
-        
-             
-            handleFilePondRevert(uniquid, load , error){
-                console.log(uniquid);
-                axiosApi.delete('api/image/upload/revert', {
-                   data: {
-                    folder: uniquid 
-                   }
-                }).then(res=>{
-                    console.log(res);
-                });
-
-                load();
-            }   
-
-         
-           
-        }
+  created() {
+    this.setFileType();
+    this.authtoken = localStorage.getItem("token");
+    if (this.passFiles.id != null) {
+      // this.files = this.passFile
+      console.log("has data passed");
+    } else {
+      console.log("no data passed");
     }
+  },
+  mounted() {
+    // console.log(token);
+  },
+  components: {
+    FilePond,
+    BaseFileCard,
+  },
+  data() {
+    return {
+      authtoken: null,
+      files: [],
+      succes_files: [],
+      failed_files: 0,
+      fileType:
+        "image/*, application/msword, application/pdf,  text/plain , application/json, application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    };
+  },
+
+  methods: {
+    setFileType() {
+      if (this.passFiletype == "image") {
+        this.fileType = "image/*";
+      }
+
+      if (this.passFiletype == "pdf") {
+        this.fileType = "application/pdf";
+      }
+
+      if (this.passFiletype == "pdf|docx" || this.passFiletype == "pdf|docs") {
+        this.fileType =
+          "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      }
+
+      if (this.passFiletype == "json") {
+        this.fileType = "application/json";
+      }
+      if (this.passFiletype == "text") {
+        this.fileType = "text/plain";
+      }
+    },
+    handleFilePondProcessFiles() {},
+
+    handeFilePondActive(file) {
+      // console.log(file.filename);
+      // console.log(file.serverId);
+    },
+
+    handleFilePondInit() {
+      // console.log('initialise');
+    },
+
+    handleFilePondLoad(response) {
+      if (response != "") {
+        const res = JSON.parse(response);
+        this.files.push(res.folder);
+        this.succes_files.push(res.filename);
+
+        //  it will pass the unique folder and the actual file name
+        this.$emit("fileIsUploaded", res);
+        //
+        return res.folder;
+      } else {
+        this.failed_files++;
+      }
+    },
+
+    handleFilePondError(response) {},
+
+    handleFilePondRevert(uniquid, load, error) {
+      axiosApi
+        .delete("api/image/upload/revert", {
+          data: {
+            folder: uniquid,
+          },
+        })
+        .then((res) => {
+          this.succes_files = this.succes_files.filter(filename => filename != res.data.file);
+
+          //this.$emit('fileIsDeleted', res);
+        });
+
+      load();
+    },
+  },
+};
 </script>
 
 <style scoped>
-.filepond--root {
-    max-width:20em;
-}
-
-.filepond--item {
-    width: calc(50% - 0.5em);
-}
-
-
-@media (min-width: 30em) {
-    .filepond--item {
-        width: calc(50% - 0.5em);
-    }
-}
-
-@media (min-width: 50em) {
-    .filepond--item {
-        width: calc(33.33% - 0.5em);
-    }
-}
 
 
 </style>

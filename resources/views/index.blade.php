@@ -44,7 +44,18 @@
             color:white !important;
             padding: 20px;
             }
-        
+{{--  
+            .filepond--root {
+
+                overflow-y: auto; 
+            }
+            .filepond--item {
+                width: calc(50% - 0.5em);
+            }         --}}
+            
+            .filepond--fullsize-overlay{
+                z-index: 100000 !important;
+            }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

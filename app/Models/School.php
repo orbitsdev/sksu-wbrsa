@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Image;
+use App\Models\SchoolImage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -13,7 +13,7 @@ class School extends Model
     protected $guarded = [];
 
     public function images(){
-        return $this->hasMany(Image::class);
+        return $this->hasMany(SchoolImage::class);
     }
     
 }

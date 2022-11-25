@@ -6,12 +6,13 @@ use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Image extends Model
+class SchoolImage extends Model
 {
     use HasFactory;
-    protected $guarded =[];
+    protected $guarded = [];
 
     public function school(){
         return $this->belongsTo(School::class);
     }
+
 }

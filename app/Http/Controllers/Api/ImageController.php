@@ -18,10 +18,17 @@ class ImageController extends Controller
 
     public function uploadToLocal(Request $request){
 
+
+
+        // if($request->hasFile('files')){
+        //     return $request->file('files')->getClientOriginalExtension();
+        // }
+
         if($request->hasFile('files')){
 
             $image = $request->file('files');
             $file_name = $image->getClientOriginalName();
+            $file_extension = $image->getClientOriginalExtension();
             $folder = uniqid('files', true);
             $image->storeAs('tmp/'. $folder , $file_name);
             
@@ -29,15 +36,14 @@ class ImageController extends Controller
                 'folder' => $folder,
                 'file' => $file_name
             ]);
-            return $folder;
+
+            // if you want to use objec
+             return response()->json(['folder'=> $folder,'filename'=> $file_name]);
+            //return $folder;
         }
         return '';
 
-        // if($request->hasFile('images')){
-
-           
-        //     return $request->file('images')->store('tmp', 'public');
-        // }
+       
 
     }
 
@@ -46,12 +52,13 @@ class ImageController extends Controller
         
 
 
-        $tmp_file = TemporaryStorage::where('folder', $request->input('folder'))->first();
+        $tmp_file = TemporaryStorage::select('folder', 'file')->where('folder', $request->input('folder'))->first();
         if($tmp_file){
-            
+            $actual_file = $tmp_file;
             Storage::deleteDirectory('tmp/'.$tmp_file->folder);
             $tmp_file->delete();
-            return response()->json('success');
+            
+            return $actual_file;
             
         }
 

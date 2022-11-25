@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('school_images', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('school_id');
-            $table->string('file_name')->nullable();
-            $table->string('local_path')->nullable();
-            $table->string('url')->nullable();
-            $table->timestamps();
+            $table->string('folder');
+            $table->string('file');
+            $table->string('type');
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('school_images');
     }
 };

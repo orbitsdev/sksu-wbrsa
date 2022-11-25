@@ -1,13 +1,13 @@
 <template>
   <w-card class="cs" content-class="pa0">
 
-
+      <!-- {{ form }} -->
 
     <BaseInput label="School Name" :showLabel="false"  v-model="form.name" :error="error.name"/>
     <BaseInput label="Schol Address"  :showLabel="false" v-model="form.address" :error="error.address"/>
 
     <div class="inp mb-3">
-      <DragAndDropFiles @successUpload="setSchoolImage" />
+      <DragAndDropFiles @fileIsUploaded="addTheFile" @fileIsDeleted="deleteFromFiles" :PdfPreview="false" label="Drop images here..."  :multiple="true" />
     </div>
 
     <div class="action mt-3">
@@ -74,24 +74,20 @@ created () {
 
   methods: {
 
-    
-
-    setSchoolImage(file){
-
-      this.form.files.push(file);       
-   
+    addTheFile(files_collection){
+      this.form.files = files_collection;
+      console.log(this.form.files);
     },
     
-
+    removeTheFiles(response){
+     
+      console.log(response);
+    } ,
+  
     async submitForm(){
-
-        if(this.passData  != null){
-          console.log('update');
-          this.updateSchool();
-        }else{
-          console.log('add scool');
-          this.addSchool();
-        }
+        
+      this.addSchool();
+        
     },
 
     async updateSchool(){
@@ -146,8 +142,8 @@ created () {
         .post("api/schools", this.form)
         .then((res) => {
           console.log(res);
-          this.$emit("close", true);
-          this.showToast();
+          // this.$emit("close", true);
+          // this.showToast();
           
         })
         .catch((err) => {
@@ -169,7 +165,7 @@ created () {
 <style scoped>
 
 .cs{
-  max-height: 100vh;
+  max-height: 80vh;
   overflow-y: auto;
 }
 .action {

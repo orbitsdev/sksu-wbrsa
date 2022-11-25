@@ -6,6 +6,8 @@ use App\Models\Image;
 use App\Models\School;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\SchoolImage;
+use GuzzleHttp\Promise\Create;
 
 class SchoolController extends Controller
 {
@@ -45,27 +47,29 @@ class SchoolController extends Controller
                 'address'=> 'required',
             ]);
             
-            
             $school = School::create($validated);
 
-
-
             if(count($request->input('files'))>0){
-                    foreach($request->input('files') as $file){
-                        $school->images()->create([
-                            'file_name'=> $file,
-                            'local_path'=> $file,
-                            'url'=> null,
+                    
+                    foreach($request->input('filees') as $file){
+                            
+                        SchoolImage::create([
+                            'folder'=> $file->folder,
+                            'file'=> $file->filename,
+                            'type'=> 'features',
                         ]);
-                    }      
-            }
-          
+                    }
 
-            if($school != null){
-                return response()->json('School Added');
-            }else{
-                return response()->json('Error occur while saving data', 500 );
             }
+            
+            if($school){
+                return response()->json('success', 200);
+            }else{
+                return response()->json('Failed', 500);
+            }
+
+
+
 
 
     }
@@ -116,16 +120,7 @@ class SchoolController extends Controller
             return response()->json('failed');
          }
        
-        // $school->adress = $request->name;
-        
-        // if($school->save){
-
-        //     return response()->json('succes');
-            
-        // }else{
-        //     return response()->json('failed');
-        // }
-
+      
 
 
         
@@ -149,14 +144,5 @@ class SchoolController extends Controller
         }
     }
 
-    public function uploadImage(Request $request){
-
-        return response()->json($request->all());
-        // if($request->hasFile('imageFilepond')){
-        //     return $request->file('imageFilepond')->store('uploads/images', 'public');
-        // }
-
-        // return response()->json('succes');
-
-    }
+   
 }

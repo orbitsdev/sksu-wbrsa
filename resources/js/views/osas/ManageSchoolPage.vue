@@ -28,7 +28,7 @@ v
 
     <!--DIALOG FOR ADD AND UPDATE -->
     <teleport to="#app">
-      <BaseFormDialog :title="openForm" :formtype="!!openForm">
+      <BaseFormDialog :title="openForm" :formtype="!!openForm" :formPersistent="false"  >
         <SchoolForm @close="closeFormDialog" @hasError="showError" :passData='selectedSchool'/>
       </BaseFormDialog>
     </teleport>

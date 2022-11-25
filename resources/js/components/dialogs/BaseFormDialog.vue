@@ -7,10 +7,11 @@
     <w-dialog
       v-model="formtype"
       @close="this.$emit('close')"
-      width="500"
-      transition="scale"
+      :width="formWidth"
+      :transition="formTransition"
       persistent
       :title="title"
+
       title-class="form-dialog-header"
     >
       <slot > DYNAMIC COTENT </slot>
@@ -43,6 +44,26 @@ export default {
       required: false,
       default: null,
     },
+    formWidth: {
+      type: String,
+      required: false,
+      default: '680',
+    },
+    formTransition: {
+      type: String,
+      required: false,
+      default: 'scale',
+    },
+
+    formPersistent: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
+    
+
+
+   
   },
 };
 </script>
