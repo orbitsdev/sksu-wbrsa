@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    'default' => env('FILESYSTEM_DISK', 'oss'),
 
     /*
     |--------------------------------------------------------------------------
@@ -59,11 +59,11 @@ return [
        
 
         'oss' => [
-            'driver'        => 'aliyun',
-            'access_id'     => env('OSS_ACCESS_KEY_ID'),
-            'access_key'    => env('OSS_SECRET_ACCESS_KEY'),
-            'bucket'        => env('OSS_BUCKET'),
-            'endpoint'      => env('OSS_ENDPOINT'),
+            'driver'        => 'oss',
+            'access_key_id'     => env('ALIYUN_OSS_ACCESS_ID'),
+            'access_key_secret'    => env('ALIYUN_OSS_ACCESS_KEY'),
+            'bucket'        => env('ALIYUN_OSS_BUCKET'),
+            'endpoint'      => env('ALIYUN_OSS_ENDPOINT'),
             'region'        => env('OSS_REGION'),
             'acs'           => env('OSS_ACS'),
             'user'          => env('OSS_USER'),

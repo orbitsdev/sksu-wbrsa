@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('school_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('school_id')->constrained()->onDelete('cascade');
+            $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
             $table->string('folder');
             $table->string('file');
             $table->string('type');

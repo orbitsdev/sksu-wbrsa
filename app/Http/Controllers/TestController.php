@@ -30,4 +30,28 @@ class TestController extends Controller
 
     //     }
     // }
+
+    public function uploadFile(Request $request){
+
+       $file = $request->file('refund_proof');
+       $path = 'upload/image/';
+       
+    
+       $storage = \Storage::disk('oss');
+
+    // return response()->json([\Storage::disk(),$request->all(), $file,config('filesystems.disks') ], 200);
+        $filename = $file->getClientOriginalName();
+      
+      try {
+        $storage->put($path.$filename, file_get_contents($file));
+      } catch (Exception $e)
+      {
+        \Log::info(['failed to upload file', $path, $file, $e->getMessage()]);
+        return false;
+      }
+
+      return $path.$filename;
+    }
+
+
 }

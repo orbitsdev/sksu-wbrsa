@@ -139,7 +139,7 @@ class SchoolController extends Controller
     public function destroy($id)
     {
         $school = School::find($id);
-            
+        $school->images()->delete();
         if($school->delete()){
             return response()->json('deleted');
         }else{

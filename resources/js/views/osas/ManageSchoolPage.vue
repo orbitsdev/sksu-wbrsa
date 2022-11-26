@@ -56,7 +56,6 @@ import axiosApi from '../../api/axiosApi';
 import NoRecord from '../../components/NoRecord.vue';
 import BaseCardShadow from "../../components/BaseCardShadow.vue";
 import IconButton from '../../components/IconButton.vue';
-import TestForm from "../forms/TestForm.vue";
 
 export default {
   components: {

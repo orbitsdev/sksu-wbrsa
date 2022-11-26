@@ -54,6 +54,9 @@ Route::delete('/image/upload/revert', [ImageController::class, 'deleteFromLocal'
 Route::post('image/upload-local',  [TestController::class, 'upload']);
 
 
+Route::post('alibaba/upload',  [TestController::class, 'uploadFile']);
+
+
 
 // MANAGE SCHOOL
 Route::resource('schools', SchoolController::class);
