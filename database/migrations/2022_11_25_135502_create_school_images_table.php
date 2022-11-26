@@ -15,11 +15,10 @@ return new class extends Migration
     {
         Schema::create('school_images', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('school_id');
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
             $table->string('folder');
             $table->string('file');
             $table->string('type');
-            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
             $table->timestamps();
         });
     }

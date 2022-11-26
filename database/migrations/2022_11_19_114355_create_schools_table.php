@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('address');  
-            $table->string('local_path')->nullable();  
-            $table->string('url')->nullable();  
             $table->timestamps();
         });
     }

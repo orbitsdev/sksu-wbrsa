@@ -28,7 +28,7 @@ v
 
     <!--DIALOG FOR ADD AND UPDATE -->
     <teleport to="#app">
-      <BaseFormDialog :title="openForm" :formtype="!!openForm" :formPersistent="false"  >
+      <BaseFormDialog :title="openForm" :formtype="!!openForm" :formPersistent="false" :formWidth="'600'" >
         <SchoolForm @close="closeFormDialog" @hasError="showError" :passData='selectedSchool'/>
       </BaseFormDialog>
     </teleport>
@@ -56,6 +56,7 @@ import axiosApi from '../../api/axiosApi';
 import NoRecord from '../../components/NoRecord.vue';
 import BaseCardShadow from "../../components/BaseCardShadow.vue";
 import IconButton from '../../components/IconButton.vue';
+import TestForm from "../forms/TestForm.vue";
 
 export default {
   components: {
@@ -145,10 +146,6 @@ export default {
       console.log(err);
       
     });
-
-
-
-  
 
   }
   

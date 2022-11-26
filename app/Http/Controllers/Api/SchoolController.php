@@ -47,29 +47,33 @@ class SchoolController extends Controller
                 'address'=> 'required',
             ]);
             
-            $school = School::create($validated);
 
-            if(count($request->input('files'))>0){
-                    
-                    foreach($request->input('filees') as $file){
-                            
-                        SchoolImage::create([
-                            'folder'=> $file->folder,
-                            'file'=> $file->filename,
-                            'type'=> 'features',
-                        ]);
-                    }
+            // return response()->json(count($request->input('files')));
 
-            }
-            
-            if($school){
-                return response()->json('success', 200);
-            }else{
-                return response()->json('Failed', 500);
-            }
+                $school = School::create($validated);
 
+              
+                // return response()->json(count($request->input('files')));
 
+                if( count($request->input('files')) > 0 ){
 
+                    foreach ($request->input('files') as $fileData) {
+                        
+                            $school->images()->create([
+                                'folder'=> $fileData['folder'],
+                                'file'=> $fileData['file'],
+                                'type'=> 'features',
+                            ]);
+
+                      }
+
+                }
+            return $school;
+            // if($school){
+            //     return response()->json('success', 200);
+            // }else{
+            //     return response()->json('Failed', 500);
+            // }
 
 
     }

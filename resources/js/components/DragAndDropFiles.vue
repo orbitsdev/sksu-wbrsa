@@ -7,6 +7,11 @@ filetype you can use
 
 <template>
 
+  <!-- {{ succes_files }} -->
+  <!-- {{ files }}
+  <w-divider class="my6 my-1"></w-divider>
+  {{ file_to_delete }} -->
+<!-- 
     <main>
         <w-divider class="my6 my-1"></w-divider>
         <div class=""> 
@@ -14,7 +19,7 @@ filetype you can use
         </div>
         <w-divider class="my6 my-1"></w-divider>
         <BaseFileCard v-if="failed_files <0" :text="'('+ failed_files+ ') Failed  '" :error="true" />
-    </main>
+    </main> -->
 
   <file-pond
     name="files"
@@ -46,10 +51,11 @@ filetype you can use
       },
       revert: handleFilePondRevert,
     }"
-    :files="files"
+    v-bind:files="files"
     @init="handleFilePondInit"
     @activatefile="handeFilePondActive"
     @processFiles="handleFilePondProcessFiles"
+    @removefile="handleFilePondRemove"
   >
   </file-pond>
 </template>
@@ -168,6 +174,8 @@ export default {
       files: [],
       succes_files: [],
       failed_files: 0,
+      
+      file_to_delete:[],
       fileType:
         "image/*, application/msword, application/pdf,  text/plain , application/json, application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     };
@@ -207,13 +215,16 @@ export default {
     },
 
     handleFilePondLoad(response) {
+
+        // console.log(response);
       if (response != "") {
         const res = JSON.parse(response);
-        this.files.push(res.folder);
-        this.succes_files.push(res.filename);
+        this.files.push(res);
+        this.succes_files.push(res.file);
 
+        const newFileCollection = this.files.map(fileDetails => fileDetails);
         //  it will pass the unique folder and the actual file name
-        this.$emit("fileIsUploaded", res);
+        this.$emit("fileIsUploaded", newFileCollection);
         //
         return res.folder;
       } else {
@@ -230,14 +241,30 @@ export default {
             folder: uniquid,
           },
         })
-        .then((res) => {
-          this.succes_files = this.succes_files.filter(filename => filename != res.data.file);
+        .then((response) => {
+            this.succes_files =  this.succes_files.filter(file => file != response.data.file);
 
-          //this.$emit('fileIsDeleted', res);
-        });
+            const indexOfObject = this.files.findIndex(object => {
+              return object.folder === response.data.folder;
+            });
+
+            this.files.splice(indexOfObject, 1);
+            const newFilteredFiles = this.files.map(fileDetails => fileDetails);
+            this.$emit('fileIsDeleted',  newFilteredFiles);
+
+      });
 
       load();
+   
     },
+    handleFilePondRemove(error, file){ 
+
+
+      
+      
+
+    }
+
   },
 };
 </script>

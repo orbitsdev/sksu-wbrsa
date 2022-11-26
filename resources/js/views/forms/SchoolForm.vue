@@ -1,13 +1,18 @@
 <template>
   <w-card class="cs" content-class="pa0">
 
-      <!-- {{ form }} -->
+
+    {{ form }}
+    <w-divider class="my6 my-1"></w-divider>
+      <!-- <p v-for="file in this.form.files" :key="file">
+        {{ file.folder }} - {{ file.file  }}
+      </p> -->
 
     <BaseInput label="School Name" :showLabel="false"  v-model="form.name" :error="error.name"/>
     <BaseInput label="Schol Address"  :showLabel="false" v-model="form.address" :error="error.address"/>
 
     <div class="inp mb-3">
-      <DragAndDropFiles @fileIsUploaded="addTheFile" @fileIsDeleted="deleteFromFiles" :PdfPreview="false" label="Drop images here..."  :multiple="true" />
+      <DragAndDropFiles @fileIsUploaded="setFiles" @fileIsDeleted="setFiles" :PdfPreview="false" label="Drop images here..."  :multiple="true" />
     </div>
 
     <div class="action mt-3">
@@ -74,14 +79,24 @@ created () {
 
   methods: {
 
+      setFiles(file_collection){
+        
+        this.form.files = file_collection;
+      },
+
     addTheFile(files_collection){
       this.form.files = files_collection;
-      console.log(this.form.files);
-    },
-    
-    removeTheFiles(response){
-     
-      console.log(response);
+      
+    },    
+    removeTheFiles(filtered_files_collections){   
+      console.log(filtered_files_collections.length);
+
+      if(filtered_files_collections.length !=0){
+
+        this.form.files = filtered_files_collections;
+      }else{
+        this.form.files = [];
+      }
     } ,
   
     async submitForm(){
@@ -137,13 +152,16 @@ created () {
     },
     
     async addSchool() {
+
       this.isLoading = true;
+
       await axiosApi
         .post("api/schools", this.form)
         .then((res) => {
           console.log(res);
-          // this.$emit("close", true);
-          // this.showToast();
+
+          this.$emit("close", true);
+          this.showToast();
           
         })
         .catch((err) => {

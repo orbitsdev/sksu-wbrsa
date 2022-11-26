@@ -8,8 +8,7 @@ use App\Http\Controllers\Api\GoogleController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\SchoolController;
 use App\Http\Controllers\Mail\NewPasswordMailController;
-
-
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,9 +44,16 @@ Route::post('/set-password', [NewPasswordMailController::class, 'setNewPassword'
 Route::get('/authorize/{provider}/redirect', [GoogleController::class ,'redirectToProvider']);
 Route::get('/authorize/{provider}/callback', [GoogleController::class ,'handleProviderCallback']);
 
+
 // DROP AND DROP FILE
 Route::post('/image/upload/local', [ImageController::class, 'uploadToLocal'])->middleware('auth:sanctum');
 Route::delete('/image/upload/revert', [ImageController::class, 'deleteFromLocal'])->middleware('auth:sanctum');
+
+
+// TEST 
+Route::post('image/upload-local',  [TestController::class, 'upload']);
+
+
 
 // MANAGE SCHOOL
 Route::resource('schools', SchoolController::class);

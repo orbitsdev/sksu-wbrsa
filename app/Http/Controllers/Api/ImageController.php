@@ -19,10 +19,10 @@ class ImageController extends Controller
     public function uploadToLocal(Request $request){
 
 
+        
 
-        // if($request->hasFile('files')){
-        //     return $request->file('files')->getClientOriginalExtension();
-        // }
+    
+        
 
         if($request->hasFile('files')){
 
@@ -38,7 +38,7 @@ class ImageController extends Controller
             ]);
 
             // if you want to use objec
-             return response()->json(['folder'=> $folder,'filename'=> $file_name]);
+             return response()->json(['folder'=> $folder,'file'=> $file_name]);
             //return $folder;
         }
         return '';
@@ -58,9 +58,12 @@ class ImageController extends Controller
             Storage::deleteDirectory('tmp/'.$tmp_file->folder);
             $tmp_file->delete();
             
-            return $actual_file;
+            return response()->json(['folder'=> $actual_file->folder, 'file'=> $actual_file->file]);
+            // return $actual_file;
             
         }
+
+        return '';
 
     }
 
