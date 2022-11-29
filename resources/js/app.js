@@ -2,8 +2,13 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+
+// VUE GLOBAL CONFIG
+// import config from './config';
+// window.config = config;
 import VueAxios from 'vue-axios';
 // SWEET ALERT
+
 
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
@@ -60,4 +65,9 @@ app.component('no-record', NoRecord);
 app.component('icon-button', IconButton );
 app.component('drag-and-drop-files', DragAndDropFiles );
 
-app.mount('#app');
+
+router.isReady().then(()=>{
+    app.mount('#app');
+
+});
+

@@ -1,7 +1,7 @@
 
 
 <template>
-    <button :class="['btn ', mode ] "> 
+    <button :class="['btn ', mode ] " :disabled="isDisable"> 
 
          <slot>Click Me</slot></button>
 </template>
@@ -14,6 +14,11 @@
                 type: String,
                 default: 'gray',
                 required: false,
+            },
+            isDisable : {
+                type: Boolean,
+                required: false,
+                default: false,
             }
         }
         

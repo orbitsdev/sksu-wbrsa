@@ -62,6 +62,9 @@
 </head>
 
 <body class="antialiased">
+
+   {{--  <img src="{{ asset('Damage-city-island-Tacloban-Philippine-Super-Typhoon-November-8-2013.jpg') }}" alt="">  --}}
+
     <div id="app">
         <App />
     </div>

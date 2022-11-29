@@ -2,37 +2,54 @@ v
 
 <template>
   <main>
-   
     <!-- <NoRecord v-if="schools.length<=0"/> -->
-    <BaseCardShadow  shadow>
-       <div class="d-flex justify-content-end ">
-         <CustomButton mode="green" class="my-1 mb-2" @click="showForm">
-           Add School
-          </CustomButton>
-    </div>
-        <SchoolsTable  :isLoading="isShoolLoading" :schools="schools.data" >
+    <!-- {{ selectedSchool }} -->
 
-          <template #default="data">
-
-            <div class="flex flex-wrap justify-center align-content-center">
-              <icon-button @click="selectSchool(data.school, 'Update School')" mode="blue" icon="fa-regular fa-pen-to-square"></icon-button>
-              <icon-button mode="green"  icon="fa-regular fa-eye"></icon-button>
-              <icon-button @click="selectSchool(data.school, 'Delete School')" mode="red" icon="fa-regular fa-trash-can"></icon-button>
-            
-
+    <BaseCardShadow shadow>
+      <div class="d-flex justify-content-end">
+        <BaseSpinner v-if="isDeleteSchoolLoading"/>
+        <CustomButton v-else mode="red" class="my-1 mb-2 mr-2" @click="deleteAllRecord">
+          Delete All School
+        </CustomButton>
+        <CustomButton mode="green" class="my-1 mb-2" @click="showForm">
+          Add School
+        </CustomButton>
+      </div>
+      <SchoolsTable :isLoading="isShoolLoading" :schools="schools.data">
+        <template #default="data">
+          <div class="flex flex-wrap justify-center align-content-center">
+            <icon-button
+              @click="selectSchool(data.school, 'Update School')"
+              mode="blue"
+              icon="fa-regular fa-pen-to-square"
+            ></icon-button>
+            <icon-button mode="green" icon="fa-regular fa-eye"></icon-button>
+            <icon-button
+              @click="selectSchool(data.school, 'Delete School')"
+              mode="red"
+              icon="fa-regular fa-trash-can"
+            ></icon-button>
           </div>
-          </template>
-        </SchoolsTable>
+        </template>
+      </SchoolsTable>
     </BaseCardShadow>
- 
 
     <!--DIALOG FOR ADD AND UPDATE -->
     <teleport to="#app">
-      <BaseFormDialog :title="openForm" :formtype="!!openForm" :formPersistent="false" :formWidth="'600'" >
-        <SchoolForm @close="closeFormDialog" @hasError="showError" :passData='selectedSchool'/>
+      <BaseFormDialog
+        :title="openForm"
+        :formtype="!!openForm"
+        :formPersistent="false"
+        :formWidth="'600'"
+      >
+        <SchoolForm
+          @close="closeFormDialog"
+          @hasError="showError"
+          :data="selectedSchool"
+        />
       </BaseFormDialog>
     </teleport>
- <!-- ERRO MODAL -->
+    <!-- ERRO MODAL -->
     <teleport to="#app">
       <BaseErrorDialog
         v-if="!!requestError"
@@ -52,13 +69,15 @@ import CustomButton from "../../components/CustomButton.vue";
 import SchoolForm from "../forms/SchoolForm.vue";
 import BaseErrorDialog from "../../components/dialogs/BaseErrorDialog.vue";
 import SchoolsTable from "./school/SchoolsTable.vue";
-import axiosApi from '../../api/axiosApi';
-import NoRecord from '../../components/NoRecord.vue';
+import axiosApi from "../../api/axiosApi";
+import NoRecord from "../../components/NoRecord.vue";
 import BaseCardShadow from "../../components/BaseCardShadow.vue";
-import IconButton from '../../components/IconButton.vue';
+import IconButton from "../../components/IconButton.vue";
+import BaseSpinner from "../../components/BaseSpinner.vue";
 
 export default {
   components: {
+    BaseSpinner,
     BaseCardShadow,
     CustomButton,
     BaseFormDialog,
@@ -66,134 +85,133 @@ export default {
     BaseErrorDialog,
     SchoolsTable,
     NoRecord,
-    IconButton ,
+    IconButton,
   },
 
-  created () {
-    
-  },
+  created() {},
   data() {
     return {
       openForm: null,
       requestError: null,
       selectedSchool: null,
-      mode: 'Add School',
+      mode: "Add School",
       schools: [],
+      isDeleteSchoolLoading: false,
       isShoolLoading: false,
     };
   },
 
-  mounted () {
+  mounted() {
     this.loadSchoolData();
   },
 
   methods: {
-
-    showForm(){
-      
+    showForm() {
       this.selectedSchool = null;
-      this.openForm = 'Add School';
-
+      this.openForm = "Add School";
     },
-    
 
-
-    selectSchool(school, action){
-    
-      if(school){      
-        this.selectedSchool= school;
-        if(action === 'Update School'){
+    selectSchool(school, action) {
+      if (school) {
+        this.selectedSchool = school;
+        if (action === "Update School") {
           this.openForm = action;
         }
 
-        if(action === "Delete School"){
-          
-          this.deleteShool(school);
-
+        if (action === "Delete School") {
+           this.showCustomConfirmationDialog({passFunction: ()=> {this.deleteSelectedSchool(school)}});
         }
-
-
-      
       }
-      
     },
-    
-    async deleteShool(school){  
 
 
-      this.$swal({
-  title: 'Are you sure?',
-  text: "You won't be able to revert this!",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Yes, delete it!'
-}).then( async (result)  =>  {
-  if (result.isConfirmed) {
-
-    await axiosApi.delete('api/schools/'+ school.id).then(res=>{
-
-      this.loadSchoolData();
-         this.$swal(
-      'Deleted!',
-      'Your data has been deleted.',
-      'success'
-    )
-    }).catch(err=>{   
-
-      console.log(err);
-      
-    });
-
-  }
-  
-})
-
-
-
-    
-    },
-    
-
-   async loadSchoolData(){
-        this.isShoolLoading = true;
-        await axiosApi.get('api/schools').then(res=>{
+    async loadSchoolData() {
+      this.isShoolLoading = true;
+      await axiosApi
+        .get("api/schools")
+        .then((res) => {
           this.schools = res.data;
-
-        }).catch(err=>{
+        })
+        .catch((err) => {
           console.log(err);
-        }).finally(()=>{
+        })
+        .finally(() => {
           this.isShoolLoading = false;
         });
     },
 
+    async deleteSelectedSchool(school){
+
+      await axiosApi.delete("api/schools/" + school.id)
+            .then((_) => {
+              this.loadSchoolData();
+              this.$swal("Deleted!", "Your data has been deleted.", "success");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+    
+    },
+
+    async deleteAllRecord(){
+      this.isDeleteSchoolLoading= true;
+      await axiosApi.post('api/schools/delete/all').then(res=>{
+        console.log(res);
+      }).catch(err=>{
+          console.log(err);
+      }).finally(()=>{
+        this.isDeleteSchoolLoading=false;
+      });
+
+    },
+
+
+    showCustomConfirmationDialog({
+      title = "Are you sure?", 
+      text="You won't be able to revert this!",
+      icon="warning",
+      confirmButtonText= "Yes, delete it!",
+      passFunction,
+    } ){
+     
+        this.$swal({
+        title: title,
+        text: text,
+        icon: icon,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText:confirmButtonText,
+
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+
+          passFunction();
+
+        
+        }
+      });
+
+    },
+    
     showToast() {
-      
-                this.$swal({
+      this.$swal({
         position: "top-end",
         icon: "success",
         showConfirmButton: false,
-        title: 'Succesfully Saved',
+        title: "Succesfully Saved",
         timer: 1700,
-        toast:true,
+        toast: true,
         width: "300px",
         customClass: {
-            title: 'text-red'
+          title: "text-red",
         },
-        
       });
-
-
-   
     },
 
     closeFormDialog(isDataSave) {
-
-        
-    
-      if(isDataSave){
-          this.loadSchoolData();
+      if (isDataSave) {
+        this.loadSchoolData();
       }
       this.openForm = null;
     },
@@ -210,8 +228,7 @@ export default {
 </script>
 
 <style scoped>
-main{
-
+main {
   transition: all 0.3s ease-in-out;
 }
 .sweet-icon {

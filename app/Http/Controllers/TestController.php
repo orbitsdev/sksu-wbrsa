@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TestController extends Controller
 {
@@ -52,6 +53,22 @@ class TestController extends Controller
 
       return $path.$filename;
     }
+
+
+    public function storetolocal(Request $request){
+
+      $file = $request->file('image');
+      $filename = $file->getClientOriginalName();
+
+      // STORE
+     if(Storage::disk('local')->put('files/'.$filename, file_get_contents($file) )){
+        return  response()->json(['succes'], 200);
+     }
+
+     return response()->json(['failed'], 500);
+
+    }
+
 
 
 }

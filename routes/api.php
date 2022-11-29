@@ -48,17 +48,19 @@ Route::get('/authorize/{provider}/callback', [GoogleController::class ,'handlePr
 // DROP AND DROP FILE
 Route::post('/image/upload/local', [ImageController::class, 'uploadToLocal'])->middleware('auth:sanctum');
 Route::delete('/image/upload/revert', [ImageController::class, 'deleteFromLocal'])->middleware('auth:sanctum');
+Route::post('/image/upload/delete-tmp', [ImageController::class, 'deleteUnsaveLocalFile'])->middleware('auth:sanctum');
 
 
 // TEST 
 Route::post('image/upload-local',  [TestController::class, 'upload']);
-
-
 Route::post('alibaba/upload',  [TestController::class, 'uploadFile']);
+Route::post('store/file',  [TestController::class, 'storetolocal']);
 
 
 
 // MANAGE SCHOOL
+Route::post('schools/delete/all', [SchoolController::class, 'deleteAllSchoolRecord']);
+Route::post('schools/delete/selected', [SchoolController::class, 'deleteSelectedSchoolRecord']);
 Route::resource('schools', SchoolController::class);
 
 
