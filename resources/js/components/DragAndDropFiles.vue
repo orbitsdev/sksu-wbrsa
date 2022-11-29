@@ -1,28 +1,7 @@
-<!-- 
-
-
-
-filetype you can use
-'image/*, application/msword, application/pdf,  text/plain , application/json, application/vnd.openxmlformats-officedocument.wordprocessingml.document' -->
 
 <template>
-  <p v-if="passFiles != null">{{ passFiles }}</p>
-  <p v-else>null</p>
-
-  <!-- <img src="../../../public/storage/files/Damage-city-island-Tacloban-Philippine-Super-Typhoon-November-8-2013.jpg" > -->
-  <!-- {{ succes_files }} -->
-  <!-- {{ files }}
-  <w-divider class="my6 my-1"></w-divider>r
-  {{ file_to_delete }} -->
-  <!-- 
-    <main>
-        <w-divider class="my6 my-1"></w-divider>
-        <div class=""> 
-            <BaseFileCard v-for="(filename, index) in  succes_files" :key="index" :text="filename" />
-        </div>
-        <w-divider class="my6 my-1"></w-divider>
-        <BaseFileCard v-if="failed_files <0" :text="'('+ failed_files+ ') Failed  '" :error="true" />
-    </main> -->
+  
+{{ files }}
 
   <file-pond
     name="files"
@@ -161,7 +140,7 @@ export default {
     this.authtoken = localStorage.getItem("token");
   },
   mounted() {
-    // console.log( this.appUrl);
+
   },
   components: {
     FilePond,
@@ -169,7 +148,6 @@ export default {
   },
   data() {
     return {
-      // appUrl: `${process.env.MIX_BASE_URL}`,
       authtoken: null,
       files: [],
       succes_files: [],
@@ -218,27 +196,21 @@ export default {
     },
 
     handleFilePondInit() {
-      // console.log('initialise');
     },
 
     handleFilePondLoad(response) {
-      // console.log(response);
       if (response != "") {
         const res = JSON.parse(response);
         this.files.push(res);
         this.succes_files.push(res.file);
-
         const newFileCollection = this.files.map((fileDetails) => fileDetails);
-        //  it will pass the unique folder and the actual file name
+        //  pass unique folder name and the actual file name
         this.$emit("fileIsUploaded", newFileCollection);
-        //
         return res.folder;
       } else {
         this.failed_files++;
       }
     },
-
-    handleFilePondError(response) {},
 
     handleFilePondRevert(uniquid, load, error) {
       axiosApi.delete("api/image/upload/revert", {
@@ -250,16 +222,13 @@ export default {
           this.succes_files = this.succes_files.filter(
             (file) => file != response.data.file
           );
-
           const indexOfObject = this.files.findIndex((object) => {
             return object.folder === response.data.folder;
           });
-
           this.files.splice(indexOfObject, 1);
           const newFilteredFiles = this.files.map((fileDetails) => fileDetails);
           this.$emit("fileIsDeleted", newFilteredFiles);
         });
-
       load();
     },
 

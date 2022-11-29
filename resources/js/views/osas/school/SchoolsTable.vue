@@ -28,7 +28,7 @@
                         <td class="px-4 py-2 border"> {{ school.name }}</td>
                         <td class="px-4 py-2 border"> {{ school.address }}</td>
                         <td class="px-4 py-2 border"> {{ school.name }}</td>
-                        <td class="px-4 py-2 border"> <slot :school="school"></slot></td>
+                        <td class="px-4 py-2 border"> <slot :school="school" :key="index"></slot></td>
                     </tr>
                 </tbody>
             </table>

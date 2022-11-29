@@ -1,15 +1,7 @@
 <template>
   <w-card class="cs" content-class="pa0">
-    <w-divider class="my6 my-1"></w-divider>
-    <!-- <p v-for="file in this.form.files" :key="file">
-      {{ file.folder }} - {{ file.file  }}
-      
-    </p> -->
-
-    <!-- <p v-if="data != null"> {{ data.images }}</p> -->
-    <w-divider class="my6 my-1"></w-divider>
-    FIles {{ form.files }}
-
+ 
+ {{ this.form }}
     <BaseInput
       label="School Name"
       :showLabel="false"
@@ -24,11 +16,11 @@
     />
 
     <div class="inp mb-3">
-      `x
+      
       <DragAndDropFiles
         @fileIsUploading="setFileIsLoading"
         :passFiletype="'image'"
-        :passFiles="form.files"
+        :passFiles="form.images"
         @fileIsUploaded="setFiles"
         @fileIsDeleted="setFiles"
         :PdfPreview="false"
@@ -49,7 +41,7 @@
         :mode="'green'"
         :isDisable="isFileLoading"
       >
-        Save</CustomButton
+         {{ data != null ? 'Update' : 'Save'}}</CustomButton
       >
     </div>
   </w-card>
@@ -79,8 +71,9 @@ export default {
   },
 
   created() {
-    if (this.data != null && this.data.images.length > 0) {
-      this.form.files = this.data.images;
+    
+    if (this.data != null) {
+        this.form = this.data;
     }
   },
 
@@ -94,7 +87,7 @@ export default {
       form: {
         name: "",
         address: "",
-        files: [],
+        images: [],
       },
       validators: {
         required: (value) => !!value || "This field is required",
@@ -105,8 +98,15 @@ export default {
   methods: {
 
 
-     submitForm() {
-      this.addSchool();
+     submitForm() {  
+
+      if(this.data != null){
+        this.updateSchool();
+        
+      }else{
+         this.addSchool();
+      }
+
     },
 
     // AXIOS METHOD 
@@ -133,12 +133,14 @@ export default {
     },
 
     async updateSchool() {
+
+
+      console.log('update');
       this.isLoading = true;
 
       await axiosApi
         .put("api/schools/" + this.data.id, this.form)
         .then((res) => {
-          console.log(res);
           this.$emit("close", true);
           this.showToast();
         })
@@ -157,7 +159,9 @@ export default {
     },
 
     handleCloseForm() {
-      if (this.form.files.length > 0) {
+
+      
+      if (this.form.images.length > 0) {
         this.$swal({
           title: "You have unsave upload files",
           text: "Are you sure do you want to close it?",
@@ -168,17 +172,18 @@ export default {
           confirmButtonText: "Yes",
         }).then((result) => {
           if (result.isConfirmed) {
-                
-
-            if(this.data == null){
+      
+            
+            // IF DATA IS NOT NULL IT MEANS UPDATE
+            if(this.data === null){
               this.deleteTemporyFiles();
-
             }
-
-               this.$emit("close");
+            this.$emit("close");
+              
           }
         });
       } else {
+
         this.$emit("close");
       }
     },
@@ -192,18 +197,18 @@ export default {
     },
 
     setFiles(file_collection) {
-      this.form.files = file_collection;
+      this.form.images = file_collection;
     },
 
     addTheFile(files_collection) {
-      this.form.files = files_collection;
+      this.form.images = files_collection;
     },
 
     removeTheFiles(filtered_files_collections) {
       if (filtered_files_collections.length != 0) {
-        this.form.files = filtered_files_collections;
+        this.form.images = filtered_files_collections;
       } else {
-        this.form.files = [];
+        this.form.images = [];
       }
     },
 
@@ -226,7 +231,7 @@ export default {
 
 
       await axiosApi.post('api/image/upload/delete-tmp', {
-        files: this.form.files
+        files: this.form.images
       }).then(res=>{
         console.log(res);
       }).catch(err=>{

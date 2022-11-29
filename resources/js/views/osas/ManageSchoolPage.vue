@@ -2,30 +2,32 @@ v
 
 <template>
   <main>
-    <!-- <NoRecord v-if="schools.length<=0"/> -->
-    <!-- {{ selectedSchool }} -->
-
     <BaseCardShadow shadow>
       <div class="d-flex justify-content-end">
-        <BaseSpinner v-if="isDeleteSchoolLoading"/>
-        <CustomButton v-else mode="red" class="my-1 mb-2 mr-2" @click="deleteAllRecord">
-          Delete All School
-        </CustomButton>
-        <CustomButton mode="green" class="my-1 mb-2" @click="showForm">
-          Add School
-        </CustomButton>
+        <div>
+          <BaseSpinner v-if="isDeleteSchoolLoading" />
+          <CustomButton
+            v-else
+            mode="red"
+            class="mr-1"
+            @click="showDeleteAllRecordConfirmation"
+          >
+            <i class="fa-regular fa-trash-can"></i> Delete All
+          </CustomButton>
+        </div>
+        <CustomButton mode="green" @click="showForm"> Add School </CustomButton>
       </div>
-      <SchoolsTable :isLoading="isShoolLoading" :schools="schools.data">
+      <SchoolsTable class="mt-2" :isLoading="isShoolLoading" :schools="schools.data">
         <template #default="data">
           <div class="flex flex-wrap justify-center align-content-center">
             <icon-button
-              @click="selectSchool(data.school, 'Update School')"
+              @click="selectSchool(data.school.id, 'Update School')"
               mode="blue"
               icon="fa-regular fa-pen-to-square"
             ></icon-button>
             <icon-button mode="green" icon="fa-regular fa-eye"></icon-button>
             <icon-button
-              @click="selectSchool(data.school, 'Delete School')"
+              @click="selectSchool(data.school.id, 'Delete School')"
               mode="red"
               icon="fa-regular fa-trash-can"
             ></icon-button>
@@ -64,6 +66,8 @@ v
 </template>
 
 <script>
+import { toRefs, toRef } from "vue";
+
 import BaseFormDialog from "../../components/dialogs/BaseFormDialog.vue";
 import CustomButton from "../../components/CustomButton.vue";
 import SchoolForm from "../forms/SchoolForm.vue";
@@ -111,19 +115,26 @@ export default {
       this.openForm = "Add School";
     },
 
-    selectSchool(school, action) {
-      if (school) {
-        this.selectedSchool = school;
+    selectSchool(schoolId, action) {
+   
+        this.selectedSchool = this.schools.data.find((schoolDetails) => schoolDetails.id == schoolId);
+          console.log(this.selectedSchool);
+          
         if (action === "Update School") {
           this.openForm = action;
         }
 
         if (action === "Delete School") {
-           this.showCustomConfirmationDialog({passFunction: ()=> {this.deleteSelectedSchool(school)}});
+          this.showCustomConfirmationDialog({
+            passFunction: () => {
+              this.deleteSelectedSchool(selectedSchool);
+            },
+          });
         }
-      }
-    },
 
+      
+
+    },
 
     async loadSchoolData() {
       this.isShoolLoading = true;
@@ -140,60 +151,63 @@ export default {
         });
     },
 
-    async deleteSelectedSchool(school){
-
-      await axiosApi.delete("api/schools/" + school.id)
-            .then((_) => {
-              this.loadSchoolData();
-              this.$swal("Deleted!", "Your data has been deleted.", "success");
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-    
+    async deleteSelectedSchool(school) {
+      await axiosApi
+        .delete("api/schools/" + school.id)
+        .then((_) => {
+          this.loadSchoolData();
+          this.$swal("Deleted!", "Your data has been deleted.", "success");
+        })
+        .catch((err) => {
+          this.requestError = err;
+        });
     },
 
-    async deleteAllRecord(){
-      this.isDeleteSchoolLoading= true;
-      await axiosApi.post('api/schools/delete/all').then(res=>{
-        console.log(res);
-      }).catch(err=>{
-          console.log(err);
-      }).finally(()=>{
-        this.isDeleteSchoolLoading=false;
+    showDeleteAllRecordConfirmation() {
+      this.showCustomConfirmationDialog({
+        text: " Do you want to delete all record , You won't be able to revert this!",
+        confirmButtonText: "Yes Delete all school record",
+        passFunction: this.deleteAllRecord,
       });
-
     },
-
+    async deleteAllRecord() {
+      this.isDeleteSchoolLoading = true;
+      await axiosApi
+        .post("api/schools/delete/all")
+        .then((res) => {
+          this.loadSchoolData();
+          this.$swal("Deleted!", "Your data has been deleted.", "success");
+        })
+        .catch((err) => {
+          this.requestError = err;
+        })
+        .finally(() => {
+          this.isDeleteSchoolLoading = false;
+        });
+    },
 
     showCustomConfirmationDialog({
-      title = "Are you sure?", 
-      text="You won't be able to revert this!",
-      icon="warning",
-      confirmButtonText= "Yes, delete it!",
+      title = "Are you sure?",
+      text = "You won't be able to revert this!",
+      icon = "warning",
+      confirmButtonText = "Yes, delete it!",
       passFunction,
-    } ){
-     
-        this.$swal({
+    }) {
+      this.$swal({
         title: title,
         text: text,
         icon: icon,
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText:confirmButtonText,
-
+        confirmButtonText: confirmButtonText,
       }).then(async (result) => {
         if (result.isConfirmed) {
-
           passFunction();
-
-        
         }
       });
-
     },
-    
+
     showToast() {
       this.$swal({
         position: "top-end",

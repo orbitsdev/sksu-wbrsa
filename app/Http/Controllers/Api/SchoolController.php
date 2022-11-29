@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Image;
 use App\Models\School;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\SchoolImage;
+use Illuminate\Http\Request;
 use GuzzleHttp\Promise\Create;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\TemporaryStorage;
+use Illuminate\Support\Facades\Storage;
+
 
 class SchoolController extends Controller
 {
@@ -19,9 +23,7 @@ class SchoolController extends Controller
     public function index()
     {
 
-            return School::with('images')->paginate(10);        
-
-        
+        return School::with('images')->paginate(10);
     }
 
     /**
@@ -42,38 +44,34 @@ class SchoolController extends Controller
      */
     public function store(Request $request)
     {
-            $validated = $request->validate([
-                'name'=> 'required',
-                'address'=> 'required',
-            ]);
-            
+        $validated = $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+        ]);
 
-            // return response()->json(count($request->input('files')));
+        $school = School::create($validated);
 
-                $school = School::create($validated);
+        if (count($request->input('images')) > 0) {
 
-              
-                // return response()->json(count($request->input('files')));
+            foreach ($request->input('images') as $fileData) {
 
-                if( count($request->input('files')) > 0 ){
+                $school->images()->create([
+                    'folder' => $fileData['folder'],
+                    'file' => $fileData['file'],
+                    'type' => 'features',
+                ]);
 
-                    foreach ($request->input('files') as $fileData) {
-                        
-                            $school->images()->create([
-                                'folder'=> $fileData['folder'],
-                                'file'=> $fileData['file'],
-                                'type'=> 'features',
-                            ]);
-
-                      }
-
-                }
-            return $school;
-            // if($school){
-            //     return response()->json('success', 200);
-            // }else{
-            //     return response()->json('Failed', 500);
-            // }
+                Storage::disk('local')->copy('tmp/' . $fileData['folder'] . '/' . $fileData['file'], 'filesdatabase/' . $fileData['folder'] . '/' . $fileData["file"]);
+                Storage::deleteDirectory('tmp/' . $fileData['folder']);
+                TemporaryStorage::where('folder', $fileData['folder'])->delete();
+            }
+        }
+        return $school;
+        // if($school){
+        //     return response()->json('success', 200);
+        // }else{
+        //     return response()->json('Failed', 500);
+        // }
 
 
     }
@@ -112,22 +110,17 @@ class SchoolController extends Controller
 
 
         $validated = $request->validate([
-            'name'=> 'required',
-            'address'=> 'required'
+            'name' => 'required',
+            'address' => 'required'
         ]);
 
-         $school = School::find($id);
+        $school = School::find($id);
 
-         if( $school->update($validated)){            
-             return response()->json('success');
-         }else{
-            return response()->json('failed');
-         }
-       
-      
-
-
-        
+        if ($school->update($validated)) {
+            return response()->json(['success'], 200);
+        } else {
+            return response()->json(['failed'], 500);
+        }
     }
 
     /**
@@ -140,13 +133,21 @@ class SchoolController extends Controller
     {
         $school = School::find($id);
         $school->images()->delete();
-        if($school->delete()){
+        if ($school->delete()) {
             return response()->json('deleted');
-        }else{
-            return response()->json('failed' , 500);
-            
+        } else {
+            return response()->json(['failed'], 500);
         }
     }
 
-   
+    public function deleteAllSchoolRecord(Request $request)
+    {
+
+
+        if (DB::table('schools')->delete()) {
+
+            return response()->json(['success'], 200);
+        }
+        return response()->json(['failed'], 500);
+    }
 }
