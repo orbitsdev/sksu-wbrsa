@@ -49,6 +49,7 @@ Route::get('/authorize/{provider}/callback', [GoogleController::class ,'handlePr
 Route::post('/image/upload/local', [ImageController::class, 'uploadToLocal'])->middleware('auth:sanctum');
 Route::delete('/image/upload/revert', [ImageController::class, 'deleteFromLocal'])->middleware('auth:sanctum');
 Route::post('/image/upload/delete-tmp', [ImageController::class, 'deleteUnsaveLocalFile'])->middleware('auth:sanctum');
+Route::post('/image/upload/get-folder', [ImageController::class, 'getFolder'])->middleware('auth:sanctum');
 
 
 // TEST 

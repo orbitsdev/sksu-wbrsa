@@ -8,6 +8,7 @@ use App\Models\School;
 use Illuminate\Http\Request;
 use App\Models\TemporaryStorage;
 use App\Http\Controllers\Controller;
+use App\Models\SchoolImage;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Carbon;
 
@@ -18,6 +19,14 @@ class ImageController extends Controller
 {
 
 
+    public function getFolder(Request $request){   
+        
+        $folder= $request->input('folder');
+        $schoolImage =  SchoolImage::select('folder','file')->where('folder',$folder )->first();
+        return response()->json([$schoolImage], 200);
+           
+    }
+
     public function uploadToLocal(Request $request)
     {
 
@@ -25,11 +34,11 @@ class ImageController extends Controller
 
             $image = $request->file('files');
             $filename = $image->getClientOriginalName();
-            $folder = strtotime(now());
+            $folder = uniqid().strtotime(now());
 
             // store in public
-            //  $image->storeAs('images/'.$folder, $filename, 'public_uploads' );
-            $image->storeAs('tmp/' . $folder, $filename, 'local');
+             $image->storeAs('tmp/'.$folder, $filename, 'public_uploads' );
+            // $image->storeAs('tmp/' . $folder, $filename, 'local');
 
 
             TemporaryStorage::create([
@@ -51,9 +60,9 @@ class ImageController extends Controller
         if (count($files) > 0) {
 
             foreach ($files as $file) {
-                Storage::deleteDirectory('tmp/' . $file['folder']);
-                $tmp_file  = TemporaryStorage::where('folder', $file['folder'])->first();
-                $tmp_file->delete();
+                Storage::disk('public_uploads')->deleteDirectory('tmp/' . $file['folder']);
+                TemporaryStorage::where('folder', $file['folder'])->delete();
+   
             }
 
             return response()->json(['success'], 200);
@@ -68,10 +77,12 @@ class ImageController extends Controller
 
 
         $tmp_file = TemporaryStorage::select('folder', 'file')->where('folder', $request->input('folder'))->first();
+        
         if($tmp_file){
-            Storage::disk('local')->deleteDirectory('tmp/'.$tmp_file->folder);
-            $tmp_file->delete();
+            Storage::disk('public_uploads')->deleteDirectory('tmp/'.$tmp_file->folder);
+            TemporaryStorage::where('folder', $tmp_file->folder)->delete();
         }
-        return response()->json([$tmp_file->folder,$tmp_file->file, $tmp_file["folder"], $tmp_file["file"]]);
+
+        return response()->json(['folder' => $tmp_file ->folder, 'file' => $tmp_file ->file]);
     }
 }

@@ -10,7 +10,7 @@ v
           mode="red"
           @click="showConfirmationForMultipleDelete"
         >
-          Delete Selected School
+          Delete Selected Files ({{ selectedMultipleSchool.length }})
         </CustomButton>
         <input
           type="text"

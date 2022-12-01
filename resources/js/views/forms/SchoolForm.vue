@@ -1,6 +1,5 @@
 <template>
   <w-card class="cs" content-class="pa0">
- {{ this.form }}
     <BaseInput
       label="School Name"
       :showLabel="false"
@@ -17,14 +16,16 @@
     <div class="inp mb-3">
       
       <DragAndDropFiles
-        @fileIsUploading="setFileIsLoading"
-        :passFiletype="'image'"
-        :passFiles="form.images"
-        @fileIsUploaded="setFiles"
-        @fileIsDeleted="setFiles"
-        :PdfPreview="false"
-        label="Drop images here..."
-        :multiple="true"
+      label="Drop images here..."
+      :passFiles="form.images"
+      :passFiletype="'image'"
+      :PdfPreview="false"
+      :multiple="true"
+      :isUpdating="data != null"
+      @fileIsUploading="setFileIsLoading"
+      @fileIsUploaded="setFiles"
+      @fileIsDeleted="setFiles"
+    
       />
     </div>
 

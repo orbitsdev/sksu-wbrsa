@@ -21,6 +21,7 @@ class SchoolController extends Controller
 
         $schools = School::with('images')->get();
         if(count($schools)> 0){
+            
             foreach ($schools as $schoolData) {
                 if (count($schoolData->images) > 0) {
                     $this->deleteImage($schoolData);
@@ -115,10 +116,15 @@ class SchoolController extends Controller
                     'file' => $fileData['file'],
                     'type' => 'features',
                 ]);
+                
 
-                Storage::disk('local')->copy('tmp/' . $fileData['folder'] . '/' . $fileData['file'], 'filesdatabase/' . $fileData['folder'] . '/' . $fileData["file"]);
-                Storage::deleteDirectory('tmp/' . $fileData['folder']);
-                TemporaryStorage::where('folder', $fileData['folder'])->delete();
+                 $fromTemporaryFolder = 'tmp/' . $fileData['folder'] . '/' . $fileData['file'];
+                 $toFilesFolder = 'files/' . $fileData['folder'] . '/' . $fileData['file'];
+                 $temporaryFolderPath ='tmp/'.$fileData['folder']; 
+                 
+                 Storage::disk('public_uploads')->copy($fromTemporaryFolder, $toFilesFolder);
+                 Storage::disk('public_uploads')->deleteDirectory($temporaryFolderPath);
+                 TemporaryStorage::where('folder', $fileData['folder'])->delete();
             }
         }
 
@@ -200,9 +206,9 @@ class SchoolController extends Controller
     {
 
 
-        if (count($school->images) > 0) {
+        if (count($school->images) > 0) {   
             foreach ($school->images as $image) {
-                Storage::deleteDirectory('filesdatabase/' . $image["folder"]);
+                Storage::disk('public_uploads')->deleteDirectory('files/' . $image["folder"]);
             }
         }
     }
