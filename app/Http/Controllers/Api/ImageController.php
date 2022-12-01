@@ -18,39 +18,31 @@ use Illuminate\Support\Facades\Storage;
 class ImageController extends Controller
 {
 
-
     public function getFolder(Request $request){   
-        
         $folder= $request->input('folder');
         $schoolImage =  SchoolImage::select('folder','file')->where('folder',$folder )->first();
         return response()->json([$schoolImage], 200);
            
     }
 
+    
     public function uploadToLocal(Request $request)
     {
-
         if ($request->hasFile('files')) {
-
             $image = $request->file('files');
             $filename = $image->getClientOriginalName();
             $folder = uniqid().strtotime(now());
-
-            // store in public
-             $image->storeAs('tmp/'.$folder, $filename, 'public_uploads' );
-            // $image->storeAs('tmp/' . $folder, $filename, 'local');
-
-
+            $image->storeAs('tmp/'.$folder, $filename, 'public_uploads' );
             TemporaryStorage::create([
                 'folder' => $folder,
                 'file' => $filename
             ]);
 
-
-            return response()->json(['folder' => $folder, 'file' => $filename]);
+            return response()->json(['folder' => $folder, 'file' => $filename, $filename]);
         }
         return '';
     }
+
 
 
     public function deleteUnsaveLocalFile(Request $request)

@@ -1,17 +1,16 @@
 <template>
-
   {{ this.isUpdating }}
   {{ this.files }}
   <file-pond
     name="files"
-    :class="filePondStyle"
     ref="pond"
+    allowPdfPreview="false"
     allowFileSizeValidation="true"
+    :class="filePondStyle"
     :label-idle="label"
     :accepted-file-types="fileType"
     :allow-multiple="multiple"
     :maxFileSize="maxSize"
-    allowPdfPreview="false"
     :itemInsertLocation="insertFile"
     :pdfPreviewHeight="pdfHeight"
     credits="false"
@@ -135,7 +134,7 @@ export default {
     },
   },
 
-  emits: ["fileIsUploaded", "fileIsDeleted", "fileIsUploading",],
+  emits: ["fileIsUploaded", "fileIsDeleted", "fileIsUploading", "enitialFileIsRemove"],
 
   created() {
     this.setFileType();
@@ -180,13 +179,11 @@ export default {
 
     // FILE IS FINISHED LOAD
     handleFilePondLoad(response) {
+      
       if (response != "") {
         const res = JSON.parse(response);
 
         if (this.isUpdating) {
-
-          
-            
         } else {
           this.files.push(res);
           this.succes_files.push(res.file);
@@ -201,10 +198,11 @@ export default {
       }
     },
 
-    // REVER METHOD
+    // REVERT METHOD
     handleFilePondRevert(uniquid, load, error) {
+
       if (this.isUpdating) {
-            console.log(uniquid);
+
       } else {
         axiosApi
           .delete("api/image/upload/revert", {

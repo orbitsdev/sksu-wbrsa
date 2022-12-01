@@ -16,11 +16,12 @@
     <div class="inp mb-3">
       
       <DragAndDropFiles
-      label="Drop images here..."
       :passFiles="form.images"
+      label="Drop images here..."
       :passFiletype="'image'"
       :PdfPreview="false"
       :multiple="true"
+      
       :isUpdating="data != null"
       @fileIsUploading="setFileIsLoading"
       @fileIsUploaded="setFiles"
