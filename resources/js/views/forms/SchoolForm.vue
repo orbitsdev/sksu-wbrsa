@@ -13,10 +13,17 @@
       :error="error.address"
     />
 
+    <div v-if="data" >
+      <w-div v-for='(item,index) in form.images' class="ma1" round :key='index'>
+         {{ item.file }}
+         <w-button class="ma1 ml-1 bg-danger" color="danger" @click='deleteSchoolImage(item.id)' > delete </w-button>
+       </w-div>
+    </div>
+
     <div class="inp mb-3">
       
       <DragAndDropFiles
-      :passFiles="form.images"
+      :passFiles="[]"
       label="Drop images here..."
       :passFiletype="'image'"
       :PdfPreview="false"
@@ -31,7 +38,7 @@
     </div>
 
     <div class="action mt-3">
-      <CustomButton class="mr-2" @click="handleCloseForm" :isDisable="isFileLoading">
+      <CustomButton class="mr-2" @click="handleCloseForm" >
         Close</CustomButton
       >
       <BaseSpinner v-if="isLoading" />
@@ -40,7 +47,7 @@
         type="submit"
         @click="submitForm"
         :mode="'green'"
-        :isDisable="isFileLoading"
+        
       >
          {{ data != null ? 'Update' : 'Save'}}</CustomButton
       >
@@ -54,6 +61,7 @@ import BaseSpinner from "../../components/BaseSpinner.vue";
 import axiosApi from "../../api/axiosApi";
 import DragAndDropFiles from "../../components/DragAndDropFiles.vue";
 import BaseInput from "../../components/BaseInput.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -76,6 +84,7 @@ export default {
     if (this.data != null) {
         this.form = this.data;
     }
+    console.log(this.data);
   },
 
   data() {
@@ -108,6 +117,29 @@ export default {
          this.addSchool();
       }
 
+    },
+    deleteSchoolImage(image_id) {
+      axiosApi.get('/api/schools/delete-image?id=' + image_id)
+        .then(({data})  => {
+          if (data.success)
+          {
+            this.$swal({
+              title: 'Success',
+              icon: 'success',
+              text : 'Image Deleted',
+            })
+           this.form.images = this.form.images.find((item) => item.id != image_id)
+          } else {
+            this.$swal({
+              title: 'Warning',
+              text: data.message,
+              icon : 'warning',
+            })
+          }
+        }).
+        catch((err) => {
+          console.log(error)
+        })
     },
 
     // AXIOS METHOD 

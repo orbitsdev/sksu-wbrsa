@@ -212,4 +212,25 @@ class SchoolController extends Controller
             }
         }
     }
+
+    public function deleteSchoolImage(Request $request)
+    {
+      $school_image = SchoolImage::where('id', $request->id)->first();
+      if(!$school_image){
+        return response()->json(['success' => false, 'message' => 'Failed to fine school image'], 200);
+      }
+      try {
+        Storage::disk('public_uploads')->deleteDirectory('files/' . $school_image["folder"]);
+      } catch (Exception $e)
+      {
+        \Log::info(['failed to delete image of school', $school_image]);
+        response()->json(['success' => false, 'message' => 'Failed to delete shool image'], 200);
+      }
+
+      $school_image->delete();
+
+      return response()->json(['success' => true], 200);
+
+
+    }
 }

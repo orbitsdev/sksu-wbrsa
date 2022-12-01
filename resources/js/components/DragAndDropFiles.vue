@@ -24,9 +24,9 @@
         methods: 'POST',
         withCredentials: true,
         headers: {
-          Authorization: 'Bearer ' + authtoken,
+          Authorization: 'Bearer ' + this.authtoken,
         },
-        onload: handleFilePondLoad,
+        onload: this.handleFilePondLoad,
         onerror: () => {},
       },
       revert: handleFilePondRevert,
@@ -141,7 +141,9 @@ export default {
     this.setInitialFiles();
     this.authtoken = localStorage.getItem("token");
   },
-  mounted() {},
+  mounted() {
+
+  },
   components: {
     FilePond,
     BaseFileCard,
@@ -149,6 +151,7 @@ export default {
   data() {
     return {
       authtoken: null,
+      initAdd: {},
       files: [],
       succes_files: [],
       initial_files: [],

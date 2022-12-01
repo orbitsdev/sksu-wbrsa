@@ -64,6 +64,8 @@ Route::post('schools/delete/all', [SchoolController::class, 'deleteAllSchoolReco
 Route::post('schools/delete/selected', [SchoolController::class, 'deleteSelectedSchoolRecord']);
 Route::post('schools/delete/multiple-selected', [SchoolController::class, 'deleteMultipleSelectedSchoolRecord']);
 Route::post('schools/search', [SchoolController::class, 'searchSchool']);
+Route::get('schools/delete-image', [SchoolController::class, 'deleteSchoolImage']);
 Route::resource('schools', SchoolController::class);
+
 
 
